@@ -9,7 +9,7 @@ jobs:
     steps:
     - name: Getting files from GitHub
       uses: actions/checkout@v1
-    - name: Rubocop checks
-      uses: gimenete/rubocop-action@master
+    - name: Rubocop Linter
+      uses: andrewmcodes/rubocop-linter-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
