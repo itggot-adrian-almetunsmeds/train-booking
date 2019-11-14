@@ -1,3 +1,5 @@
+<img src="https://github.com/itggot-adrian-almetunsmeds/train-booking/workflows/Ruby%20tests%20-%20Push/badge.svg" alt="Build status">
+
 # Train Booking
 A digital platform where customers can book train tickets.
 
