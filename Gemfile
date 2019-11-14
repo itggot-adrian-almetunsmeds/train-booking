@@ -2,6 +2,7 @@
 
 source 'https://rubygems.org'
 
+gem 'bcrypt'
 gem 'rack'
 gem 'sassc'
 gem 'sinatra'

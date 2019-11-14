@@ -1,2 +1,6 @@
+
+AllCops:
+  Exclude:
+    - 'db/seeder.rb'
 Metrics/LineLength:
   Max: 105
