@@ -10,6 +10,6 @@ jobs:
     - name: Getting files from GitHub
       uses: actions/checkout@v1
     - name: Rubocop checks
-      uses: gimenete/rubocop-action@1.0
+      uses: gimenete/rubocop-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
