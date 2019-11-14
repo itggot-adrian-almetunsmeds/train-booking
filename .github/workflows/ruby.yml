@@ -1,4 +1,4 @@
-name: Ruby tests - Push
+name: Linting
 
 on:
   push:
