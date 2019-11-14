@@ -1,5 +1,5 @@
-<img src="https://github.com/itggot-adrian-almetunsmeds/train-booking/workflows/Linting/badge.svg" alt="Build status">
-<img src="https://github.com/itggot-adrian-almetunsmeds/train-booking/workflows/Tests/badge.svg" alt="Build status">
+![Rubocop Linting](https://github.com/itggot-adrian-almetunsmeds/train-booking/workflows/Linting/badge.svg)
+![Tests](https://github.com/itggot-adrian-almetunsmeds/train-booking/workflows/Tests/badge.svg)
 
 # Train Booking
 A digital platform where customers can book train tickets.
