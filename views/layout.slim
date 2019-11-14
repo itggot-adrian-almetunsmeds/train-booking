@@ -1,4 +1,3 @@
-type html
 html lang="en"
     head
         meta charset="UTF-8"
@@ -6,4 +5,25 @@ html lang="en"
         meta http-equiv="X-UA-Compatible" content="ie=edge"
         title Document
     body
+        nav
+            a href="/"
+                h4 Home
+            - if @admin
+                a href="/admin"
+                    h4 Admin
+            div#login
+                - if @signed_in
+                    form action="/logout" method="post"
+                    button type="submit"Sign Out
+                - else
+                    h4 Log in
+                    form action="/login" method="post"
+                        input type="text" name="email" placeholder="Email Adress"/
+                        input type="password" name="password" placeholder="Password"/
+                        button type="submit"Sign In
+                    a href="/register"
+                        h5 Register
+
+
+    
         == yield
