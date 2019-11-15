@@ -34,7 +34,7 @@ class Train < DBHandler
   end
 end
 
-x = Train.new(34)
-p x
-x.type_id = 5
-x.save
+# x = Train.new(34)
+# p x
+# x.type_id = 5
+# x.save

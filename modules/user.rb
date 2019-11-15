@@ -17,26 +17,27 @@ class User < DBHandler
              else
                DBHandler.with_id 'users', options
              end
-      @id = user[:id]
-      @first_name = user[:first_name]
-      @last_name = user[:last_name]
-      @email = user[:email]
-      @points = user[:points]
-      @admin = user[:admin]
-      @password = user[:passowrd]
+      user = user.first
+      @id = user['id']
+      @first_name = user['first_name']
+      @last_name = user['last_name']
+      @email = user['email']
+      @points = user['points']
+      @admin = user['admin']
+      @password = user['password']
     else
       @first_name = options['first_name']
       @last_name = options['last_name']
       @email = options['email']
       @points = 0
       @admin = 0
-      @password = BCrypt::Password.create(options[:password])
-      @id = write_to_db 'users', self
+      @password = BCrypt::Password.create(options['password'])
+      @id = (DBHandler.write_to_db 'users', self).first['id']
     end
   end
 
   def self.excists?(email)
-    if with_condition 'users', 'WHERE email = ?', email
+    if (with_condition 'users', 'WHERE email = ?', email).first
       true
     else
       false

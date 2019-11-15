@@ -23,11 +23,11 @@ class DBHandler
   # Returns sqlresult as hash
   def self.execute(sql, values = nil)
     if values.nil?
-      connect.execute(sql).first
+      connect.execute(sql)
     elsif values.class == Array
-      connect.execute(sql, values[0..-1]).first
+      connect.execute(sql, values[0..-1])
     else
-      connect.execute(sql, values).first
+      connect.execute(sql, values)
     end
   end
 
@@ -49,7 +49,7 @@ class DBHandler
   #
   # Returns database values as hash
   def self.with_id(table, id)
-    execute("SELECT * FROM #{table} WHERE id = ?", id)
+    execute("SELECT * FROM #{table} WHERE id = ?", id).first
   end
 
   # Retrives the last row from a given table
