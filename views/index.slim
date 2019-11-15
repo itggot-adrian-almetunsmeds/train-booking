@@ -1,3 +1,5 @@
+script $(function() { $( "#datepicker-3" ).datepicker({ appendText:"(yy-mm-dd)",dateFormat:"yy-mm-dd", altField: "#datepicker-4", altFormat: "DD, d MM, yy"});});
+
 h1 Train Booking
 
 h3 To make a booking enter a departure and destination location below
@@ -5,4 +7,6 @@ h3 To make a booking enter a departure and destination location below
 form action="/search" method="post"
     input type="text" placeholder="Stockholm C" name="departure"/
     input type="text" placeholder="Göteborg C" name="arrival"/
+    input type="text" id="datepicker-3" value="#{Date.today}" name="date"/
+    div id="datepicker-3"
     button type="submit" Search

@@ -1,0 +1,39 @@
+<input type = "text" id = "datepicker-3">
+Enter Date: <div id = "datepicker-3"></div>
+
+- if @service.is_a? Array
+    - @service.each do |entity|
+        table
+            tr
+                th style="width: 20vw" Line
+                th style="width: 5vw" Departure Time
+                th style="width: 5wv" Arrival Time
+                th style="width: 4wv" Empty Seats
+            tr
+                td= entity['name']
+                td
+                    div 
+                        p= entity['departure']
+                        p= DateTime.strptime(entity['departure_time'],'%s')
+                td
+                    div 
+                        p= entity['arrival']
+                        p= DateTime.strptime(entity['arrival_time'],'%s')
+                td= entity['empty_seats']
+
+
+
+
+- else
+        table
+            tr
+                td= @service['name']
+                td
+                    div
+                        p= @service['departure']
+                        p= DateTime.strptime(@service['departure_time'],'%s')
+                td
+                    div
+                        p= @service['arrival']
+                        p= DateTime.strptime(@service['arrival_time'],'%s')
+                td= @service['empty_seats']
