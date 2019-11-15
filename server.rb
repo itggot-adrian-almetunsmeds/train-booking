@@ -13,6 +13,17 @@ class Server < Sinatra::Base
     redirect '/' if session[:user_id].nil? || !User.admin?(session[:user_id])
   end
 
+  before do
+    @signed_in = if session[:user_id].is_a? Integer
+                   @admin = User.admin?(session[:user_id])
+
+                   true
+                 else
+                   @admin = false
+                   false
+                 end
+  end
+
   get '/admin' do
     @trains = Trains.all
     @train_models = TrainModels.all
@@ -21,8 +32,11 @@ class Server < Sinatra::Base
   end
 
   get '/' do
-    @admin = false
     @error = session[:error_user]
+    session[:error_user] = nil
+
+    @search = session[:search]
+    session[:search] = nil
     slim :index
   end
 
@@ -32,15 +46,25 @@ class Server < Sinatra::Base
   end
 
   get '/search' do
+    redirect '/' if session[:search].nil?
+
     x = JSON.parse(session[:search])
     session[:search] = nil
+    if session.is_a? Array
+      session[:search_dep] = x.first['departure_id']
+      session[:search_arr] = x.first['departure_id']
+    else
+      session[:search_dep] = x['departure_id']
+      session[:search_arr] = x['arrival_id']
+    end
+    @service = Service.search(x)
     slim :search
   end
   ##########################################################################
   post '/login' do
     if User.excists? params['email']
       user = User.new(params['email'])
-      if params[:password] == BCrypt::Password.new(user.password)
+      if BCrypt::Password.new(user.password) == params[:password]
         session[:user_id] = user.id
         redirect '/'
       else
@@ -66,11 +90,11 @@ class Server < Sinatra::Base
 
   post '/logout' do
     session[:user_id] = nil
-    redirect back
+    redirect '/'
   end
 
   post '/search' do
-    session[:search] = [params['departure'], params['arrival']].to_json
+    session[:search] = { dep: params['departure'], arr: params['arrival'] }.to_json
     redirect '/search'
   end
 end
