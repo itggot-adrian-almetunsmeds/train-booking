@@ -147,6 +147,17 @@ class Seeder
       { name: '1', destination_id: 3 }
     ]
 
+    services = [
+      {train_id: '1', name: 'Express', departure_id: 1, departure_time: Date.today.to_time.to_i, arrival_id: 2, arrival_time: (Date.today + 2).to_time.to_i, empty_seats: 120},
+      {train_id: '2', name: 'Snabb', departure_id: 1, departure_time: Date.today.to_time.to_i, arrival_id: 2, arrival_time: (Date.today + 2).to_time.to_i, empty_seats: 120},
+      {train_id: '2', name: 'Snabbare', departure_id: 1, departure_time: Date.today.to_time.to_i, arrival_id: 3, arrival_time: (Date.today + 2).to_time.to_i, empty_seats: 120},
+      {train_id: '2', name: 'Snabb Express delux', departure_id: 1, departure_time: Date.today.to_time.to_i, arrival_id: 2, arrival_time: (Date.today + 2).to_time.to_i, empty_seats: 120}
+    ]
+
+    services.each do |d|
+      db.execute('INSERT INTO services (train_id, name, departure_id, departure_time, arrival_id, arrival_time, empty_seats) VALUES (?,?,?,?,?,?,?)', d[:train_id], d[:name], d[:departure_id], d[:departure_time], d[:arrival_id], d[:arrival_time], d[:empty_seats])
+    end
+
     tickets.each do |d|
       db.execute('INSERT INTO tickets (name, price, points) VALUES(?,?,?)', d[:name], d[:price], d[:points])
     end
