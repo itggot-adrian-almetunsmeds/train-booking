@@ -1,0 +1,39 @@
+name: Docs
+
+on:
+  push:
+    branches: 
+    - master
+
+jobs:
+
+  updating_docs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Getting files from GitHub
+      uses: actions/checkout@v1
+    - name: Configuring Ruby 2.6
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.6.x
+    - name: Checking Ruby version
+      run: |
+        ruby -v
+    - name: Installing Yard and generating docs
+      run: |
+        sudo apt-get install libsqlite3-dev
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+        gem install yard
+        yard doc *
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add ./docs/*
+        git commit -m ":arrow_up: Updated docs"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        DIRECTORY: './docs'
