@@ -57,113 +57,133 @@
         <div class="clear"></div>
       </div>
 
-      <div id="content"><div id='filecontents'><h1>Train Booking</h1>
+      <div id="content"><div id='filecontents'>
+<p><img src="https://github.com/itggot-adrian-almetunsmeds/train-booking/workflows/Linting/badge.svg"> <img src="https://github.com/itggot-adrian-almetunsmeds/train-booking/workflows/Tests/badge.svg"></p>
+
+<h1 id="label-Train+Booking">Train Booking</h1>
 
 <p>A digital platform where customers can book train tickets.</p>
 
-<h3>Functionality</h3>
+<h3 id="label-Functionality">Functionality</h3>
 
-<h4>Non registered users</h4>
+<h4 id="label-Non+registered+users">Non registered users</h4>
+<ul><li>
+<p>Can <em>book trips</em> between two locations on a specific <em>service</em></p>
+</li><li>
+<p>Have the ability to book <em>multiple seats</em> on a single train</p>
+</li><li>
+<p>Have the ability to <em>prefer specific seats</em> during booking</p>
+</li><li>
+<p>Users can choose between <em>multiple tickets</em>. Tickets with different prices / points</p>
+</li><li>
+<p>Can <em>register an account</em></p>
+</li></ul>
 
-<ul>
-<li>Can <i>book trips</i> between two locations on a specific <i>service</i></li>
-<li>Have the ability to book <i>multiple seats</i> on a single train</li>
-<li>Have the ability to <i>prefer specific seats</i> during booking</li>
-<li>Users can choose between <i>multiple tickets</i>. Tickets with different prices / points</li>
-<li>Can <i>register an account</i></li>
-</ul>
+<h4 id="label-Registered+users">Registered users</h4>
+<ul><li>
+<p>Same as Non registered users</p>
+</li><li>
+<p><em>Collect points</em> on bookings</p>
+</li><li>
+<p>Signed-in users have the ability to <em>cancel their booking</em></p>
+</li></ul>
 
-<h4>Registered users</h4>
+<h4 id="label-Administrator">Administrator</h4>
+<ul><li>
+<p>Administrators have the ability to <em>change points</em> of users and <em>cancel user bookings</em></p>
+</li><li>
+<p>See all bookings made to a specific service</p>
+</li></ul>
 
-<ul>
-<li>Same as Non registered users</li>
-<li><i>Collect points</i> on bookings</li>
-<li>Signed-in users have the ability to <i>cancel their booking</i></li>
-</ul>
+<h3 id="label-Description+of+entities">Description of entities</h3>
 
-<h4>Administrator</h4>
+<h4 id="label-Registered+users">Registered users</h4>
+<ul><li>
+<p>Have a name</p>
+</li><li>
+<p>Have an email</p>
+</li><li>
+<p>Have a password</p>
+</li><li>
+<p>Have points</p>
+</li><li>
+<p>Might have admin rights</p>
+</li></ul>
 
-<ul>
-<li>Administrators have the ability to <i>change points</i> of users and <i>cancel user bookings</i></li>
-<li>See all bookings made to a specific service</li>
-</ul>
+<h4 id="label-Bookings">Bookings</h4>
+<ul><li>
+<p>Have a booking nr</p>
+</li><li>
+<p>Have a booking time</p>
+</li><li>
+<p>Have a user associated with it</p>
+</li><li>
+<p>Have a total price sum</p>
+</li><li>
+<p>Have seats associated with it</p>
+</li></ul>
 
-<h3>Description of entities</h3>
+<h3 id="label-Trains">Trains</h3>
+<ul><li>
+<p>Are of a specific model</p>
+</li><li>
+<p>Have a operational status</p>
+</li><li>
+<p>Have a home location</p>
+</li><li>
+<p>Are associated with services</p>
+</li></ul>
 
-<h4>Registered users</h4>
+<h3 id="label-Train+models">Train models</h3>
+<ul><li>
+<p>Have a name</p>
+</li><li>
+<p>Have a capacity</p>
+</li><li>
+<p>Might have a cafe on board</p>
+</li></ul>
 
-<ul>
-<li>Have a name</li>
-<li>Have an email</li>
-<li>Have a password</li>
-<li>Have points</li>
-<li>Might have admin rights</li>
-</ul>
+<h3 id="label-Seats">Seats</h3>
+<ul><li>
+<p>Might be occupied</p>
+</li></ul>
 
-<h4>Bookings</h4>
+<h3 id="label-Services">Services</h3>
+<ul><li>
+<p>Have a departure location</p>
+</li><li>
+<p>Have a arrival location</p>
+</li><li>
+<p>Have a departure time</p>
+</li><li>
+<p>Have a arrival time</p>
+</li><li>
+<p>Might have empty seats</p>
+</li><li>
+<p>Are associated with a specific train</p>
+</li></ul>
 
-<ul>
-<li>Have a booking nr</li>
-<li>Have a booking time</li>
-<li>Have a user associated with it</li>
-<li>Have a total price sum</li>
-<li>Have seats associated with it</li>
-</ul>
+<h3 id="label-Tickets">Tickets</h3>
+<ul><li>
+<p>Have a name</p>
+</li><li>
+<p>Have a price</p>
+</li><li>
+<p>Give points</p>
+</li></ul>
 
-<h3>Trains</h3>
-
-<ul>
-<li>Are of a specific model</li>
-<li>Have a operational status</li>
-<li>Have a home location</li>
-<li>Are associated with services</li>
-</ul>
-
-<h3>Train models</h3>
-
-<ul>
-<li>Have a name</li>
-<li>Have a capacity</li>
-<li>Might have a cafe on board</li>
-</ul>
-
-<h3>Seats</h3>
-
-<ul>
-<li>Might be occupied</li>
-</ul>
-
-<h3>Services</h3>
-
-<ul>
-<li>Have a departure location</li>
-<li>Have a arrival location</li>
-<li>Have a departure time</li>
-<li>Have a arrival time</li>
-<li>Might have empty seats</li>
-<li>Are associated with a specific train</li>
-</ul>
-
-<h3>Tickets</h3>
-
-<ul>
-<li>Have a name</li>
-<li>Have a price</li>
-<li>Give points</li>
-</ul>
-
-<h3>Stations</h3>
-
-<ul>
-<li>Have a name</li>
-<li>Have platforms</li>
-</ul>
+<h3 id="label-Stations">Stations</h3>
+<ul><li>
+<p>Have a name</p>
+</li><li>
+<p>Have platforms</p>
+</li></ul>
 </div></div>
 
       <div id="footer">
-  Generated on Thu Nov 14 15:19:55 2019 by
+  Generated on Sun Nov 17 00:07:08 2019 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.20 (ruby-2.5.3).
+  0.9.20 (ruby-2.6.3).
 </div>
 
     </div>
