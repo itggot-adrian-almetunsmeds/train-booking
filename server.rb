@@ -58,7 +58,26 @@ class Server < Sinatra::Base
       session[:search_arr] = x['arrival_id']
     end
     @service = Service.search(x)
+    if @service.is_a? String
+      @error = @service
+      @service = false
+    end
+    @back_url = back
     slim :search
+  end
+
+  get '/service/:id' do
+    @service = Service.with_id(params['id'])
+    @dep = DBHandler.execute('SELECT * FROM destinations WHERE id = ?', @service['departure_id'])
+    @arr = DBHandler.execute('SELECT * FROM destinations WHERE id = ?', @service['arrival_id'])
+    @service['departure_time'] = DateTime.strptime(@service['departure_time'], '%s')
+    @service['arrival_time'] = DateTime.strptime(@service['arrival_time'], '%s')
+    @tickets = Service.tickets(params['id'])
+    # # p @tickets
+    # @tickets.each do |s|
+    #   # p s
+    # end
+    slim :booking
   end
   ##########################################################################
   post '/login' do
@@ -90,11 +109,28 @@ class Server < Sinatra::Base
 
   post '/logout' do
     session[:user_id] = nil
-    redirect '/'
+    redirect back
   end
 
   post '/search' do
-    session[:search] = { dep: params['departure'], arr: params['arrival'] }.to_json
+    session[:search] = { dep: params['departure'], arr: params['arrival'], time: params['date'] }.to_json
     redirect '/search'
+  end
+
+  post '/ticket' do
+    p "this ran"
+    payload = request.body.read
+    p payload
+    params[:checkout] = payload
+    '/checkout'
+  end
+
+  get '/checkout' do
+    z = JSON.parse(params[:checkout])
+    p z
+    @tickets = []
+    z.each do |temp|
+      @tickets << temp
+    end
   end
 end
