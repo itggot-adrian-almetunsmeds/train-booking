@@ -27,6 +27,7 @@ class Seeder
     db.execute('DROP TABLE IF EXISTS bookings;')
     db.execute('DROP TABLE IF EXISTS users;')
     db.execute('DROP TABLE IF EXISTS platforms;')
+    db.execute('DROP TABLE IF EXISTS connector;')
   end
 
   def self.create_tables(db)
@@ -115,9 +116,29 @@ class Seeder
                 "destination_id"    INTEGER NOT NULL
                 );
     SQL
+
+    db.execute <<-SQL
+            CREATE TABLE "connector" (
+                "ticket_id"               INTEGER NOT NULL,
+                "service_id"              INTEGER NOT NULL
+                );
+    SQL
   end
 
   def self.populate_tables(db)
+    connector = [
+      {ticket_id: 1, service_id: 1},
+      {ticket_id: 1, service_id: 2},
+      {ticket_id: 1, service_id: 3},
+      {ticket_id: 1, service_id: 4},
+      {ticket_id: 2, service_id: 2},
+      {ticket_id: 2, service_id: 3},
+      {ticket_id: 2, service_id: 4},
+      {ticket_id: 3, service_id: 4},
+      {ticket_id: 4, service_id: 4},
+      {ticket_id: 4, service_id: 2},
+      {ticket_id: 4, service_id: 1}
+    ]
     tickets = [
       { name: '1a Klass +', price: 380, points: 100 },
       { name: '1a Klass', price: 250, points: 100 },
@@ -148,11 +169,15 @@ class Seeder
     ]
 
     services = [
-      {train_id: '1', name: 'Express', departure_id: 1, departure_time: Date.today.to_time.to_i, arrival_id: 2, arrival_time: (Date.today + 2).to_time.to_i, empty_seats: 120},
-      {train_id: '2', name: 'Snabb', departure_id: 1, departure_time: Date.today.to_time.to_i, arrival_id: 2, arrival_time: (Date.today + 2).to_time.to_i, empty_seats: 120},
-      {train_id: '2', name: 'Snabbare', departure_id: 1, departure_time: Date.today.to_time.to_i, arrival_id: 3, arrival_time: (Date.today + 2).to_time.to_i, empty_seats: 120},
-      {train_id: '2', name: 'Snabb Express delux', departure_id: 1, departure_time: Date.today.to_time.to_i, arrival_id: 2, arrival_time: (Date.today + 2).to_time.to_i, empty_seats: 120}
+      {train_id: '1', name: 'Express', departure_id: 1, departure_time: DateTime.now.to_time.to_i, arrival_id: 2, arrival_time: (DateTime.now + 1).to_time.to_i, empty_seats: 120},
+      {train_id: '2', name: 'Snabb', departure_id: 1, departure_time: (DateTime.now+2).to_time.to_i, arrival_id: 2, arrival_time: (DateTime.now + 3).to_time.to_i, empty_seats: 120},
+      {train_id: '2', name: 'Snabbare', departure_id: 1, departure_time: (DateTime.now + 1).to_time.to_i, arrival_id: 3, arrival_time: (DateTime.now + 2).to_time.to_i, empty_seats: 120},
+      {train_id: '2', name: 'Snabb Express delux', departure_id: 1, departure_time: DateTime.now.to_time.to_i, arrival_id: 2, arrival_time: (DateTime.now + 2).to_time.to_i, empty_seats: 120}
     ]
+
+    connector.each do |d|
+      db.execute('INSERT INTO connector (service_id, ticket_id) VALUES (?,?)', d[:service_id], d[:ticket_id])
+    end
 
     services.each do |d|
       db.execute('INSERT INTO services (train_id, name, departure_id, departure_time, arrival_id, arrival_time, empty_seats) VALUES (?,?,?,?,?,?,?)', d[:train_id], d[:name], d[:departure_id], d[:departure_time], d[:arrival_id], d[:arrival_time], d[:empty_seats])
