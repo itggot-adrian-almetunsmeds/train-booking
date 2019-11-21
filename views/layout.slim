@@ -5,11 +5,11 @@ html lang="en"
         meta http-equiv="X-UA-Compatible" content="ie=edge"
         title Train Booking
         link rel="stylesheet" href="/css/main.css"/
-        script src="/js/main.js"
         link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"
         link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet"
         script src="https://code.jquery.com/jquery-1.10.2.js"
         script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"
+
       
     body
         nav
@@ -18,18 +18,20 @@ html lang="en"
             - if @admin
                 a href="/admin"
                     h4 Admin
-            div#login
+            div#login onclick="toggleNav()"
                 - if @signed_in
                     form action="/logout" method="post"
                         button type="submit"Sign Out
                 - else
                     h4 Log in
-                    i.material-icons onclick="toggleNav()" arrow_drop_down
-                    div
-                        form.signin action="/login" method="post"
-                            input type="text" name="email" placeholder="Email Adress"/
-                            input type="password" name="password" placeholder="Password"/
-                            button type="submit"Sign In
-                        a.signin href="/register"
-                            h5 Register
-        == yield
+                    i.material-icons arrow_drop_down
+    div#login_form
+        form.signin action="/login" method="post"
+            input type="text" name="email" placeholder="Email Adress"/
+            input type="password" name="password" placeholder="Password"/
+            button type="submit"Sign In
+        a.signin href="/register"
+            h5 Register
+    == yield
+    
+    script src="/js/main.js"
