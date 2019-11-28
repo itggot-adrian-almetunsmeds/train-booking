@@ -278,7 +278,6 @@
       <pre class="lines">
 
 
-33
 34
 35
 36
@@ -371,10 +370,21 @@
 123
 124
 125
-126</pre>
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 33</span>
+      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_create_tables'>create_tables</span><span class='lparen'>(</span><span class='id identifier rubyid_db'>db</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
@@ -436,10 +446,20 @@
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
 <span class='tstring_content'>          CREATE TABLE &quot;bookings&quot; (
               &quot;id&quot;                INTEGER PRIMARY KEY AUTOINCREMENT,
-              &quot;user_id&quot;           INTEGER NOT NULL,
+              &quot;user_id&quot;           INTEGER,
               &quot;price&quot;             INTEGER NOT NULL,
               &quot;service_id&quot;        INTEGER NOT NULL,
-              &quot;booking_time&quot;      TEXT NOT NULL
+              &quot;booking_time&quot;      TEXT NOT NULL,
+              &quot;status&quot;            INTEGER NOT NULL,
+              &quot;session_id&quot;        TEXT
+              );
+</span><span class='heredoc_end'>  SQL
+</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
+<span class='tstring_content'>          CREATE TABLE &quot;booking_connector&quot; (
+              &quot;booking_id&quot;        INTEGER NOT NULL,
+              &quot;ticket_id&quot;         INTEGER,
+              &quot;amount&quot;            INTEGER NOT NULL
               );
 </span><span class='heredoc_end'>  SQL
 </span>
@@ -501,7 +521,8 @@
 28
 29
 30
-31</pre>
+31
+32</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'db/seeder.rb', line 20</span>
@@ -517,6 +538,7 @@
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS users;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS platforms;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS connector;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS booking_connector;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -538,17 +560,6 @@
       <pre class="lines">
 
 
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
 139
 140
 141
@@ -611,10 +622,21 @@
 198
 199
 200
-201</pre>
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 128</span>
+      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 139</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_populate_tables'>populate_tables</span><span class='lparen'>(</span><span class='id identifier rubyid_db'>db</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_connector'>connector</span> <span class='op'>=</span> <span class='lbracket'>[</span>
@@ -742,7 +764,7 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Nov 21 15:51:06 2019 by
+  Generated on Thu Nov 28 21:49:50 2019 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.20 (ruby-2.6.3).
 </div>
