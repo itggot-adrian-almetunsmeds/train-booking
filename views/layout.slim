@@ -25,6 +25,9 @@ html lang="en"
                 - else
                     h4 Log in
                     i.material-icons arrow_drop_down
+    - if @error
+      div#errors
+        p= @error
     div#login_form
         form.signin action="/login" method="post"
             input type="text" name="email" placeholder="Email Adress"/

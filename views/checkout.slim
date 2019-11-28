@@ -1,0 +1,19 @@
+h4= @booking
+h4= @tickets
+
+
+
+h2 Departure: #{DateTime.strptime(@booking['departure_time'], '%s')}
+h2 Arrival: #{DateTime.strptime(@booking['arrival_time'], '%s')}
+
+- @tickets.each do |ticket|
+    - @ticket = ticket
+    == slim :'templates/ticket'
+
+
+div#complete 
+    h2 Total: #{@booking['price']} SEK
+
+form action="/confirmticket" method="post"
+    input type="hidden" name="confirm" value="true"/
+    button type="submit"

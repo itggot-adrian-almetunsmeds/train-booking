@@ -14,15 +14,15 @@ class Server < Sinatra::Base
   end
 
   before do
-    @signed_in = if session[:user_id].is_a? Integer
-                   @admin = User.admin?(session[:user_id])
-
-                   true
-                 else
-                   @admin = false
-                   false
-                 end
+    if session[:user_id].is_a? Integer
+      @admin = User.admin?(session[:user_id])  
+      @signed_in = true
+    else
+      @admin = false
+      @signed_in = false
+    end
   end
+
 
   get '/admin' do
     @trains = Trains.all
@@ -85,7 +85,7 @@ class Server < Sinatra::Base
       user = User.new(params['email'])
       if BCrypt::Password.new(user.password) == params[:password]
         session[:user_id] = user.id
-        redirect '/'
+        redirect back
       else
         session[:error_user] = 'There is no user with that password.'
         redirect back
@@ -118,19 +118,51 @@ class Server < Sinatra::Base
   end
 
   post '/ticket' do
-    p "this ran"
     payload = request.body.read
-    p payload
-    params[:checkout] = payload
+    payload = JSON.parse(payload)['value']
+    payload = JSON.parse(payload)
+    tickets = []
+    query = ""
+    payload.each do |ticket|
+      tickets << ticket['id']
+      query += ' tickets.id = ? OR'
+    end
+    query = query[0..-4]    
+    service = back.split('/')
+    # TODO: Price retrival does not return the correct value
+    price = DBHandler.execute("SELECT SUM(price) from tickets WHERE #{query}", tickets[0..-1]).first['SUM(price)']
+    DBHandler.execute('DELETE FROM bookings WHERE session_id = ?', session.id)
+    if session[:user_id]
+    DBHandler.execute('INSERT INTO bookings (price, user_id, service_id, booking_time, status, session_id) VALUES (?,?,?,?,?,?)',
+                                              price, session[:user_id], service[-1].to_i, DateTime.now.to_s, 0, session.id)
+    else
+    DBHandler.execute('INSERT INTO bookings (price, service_id, booking_time, status, session_id) VALUES (?,?,?,?,?)',
+                                              price, service[-1].to_i, DateTime.now.to_s, 0, session.id)
+    end
+    booking = DBHandler.last('bookings').first
+    payload.each do |ticket|
+      DBHandler.execute('INSERT INTO booking_connector (booking_id, ticket_id, amount) VALUES (?,?, ?)', booking['id'], ticket['id'], ticket['amount'])
+    end
     '/checkout'
   end
 
   get '/checkout' do
-    z = JSON.parse(params[:checkout])
-    p z
-    @tickets = []
-    z.each do |temp|
-      @tickets << temp
-    end
+    @booking = DBHandler.execute('SELECT * FROM bookings LEFT JOIN services ON bookings.service_id = services.id 
+      INNER JOIN platforms ON services.departure_id = platforms.id INNER JOIN services.arrival_id = platforms.id
+      
+      WHERE session_id = ?', session.id).first
+    @tickets = DBHandler.execute('SELECT * FROM booking_connector LEFT JOIN tickets ON booking_connector.ticket_id = tickets.id WHERE booking_id = ?', @booking['id'])
+    p @booking
+    p @tickets
+
+
+    # TODO: When booking has been completed remove the session_id from the db to prevent removing complete bookings
+    # Also add rewardpoints when it has been completed
+
+    slim :checkout
+  end
+
+  post '/confirmticket' do
+    redirect '/'
   end
 end

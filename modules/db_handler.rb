@@ -21,13 +21,13 @@ class DBHandler
   # values - Array containing a list of values (optional)
   #
   # Returns sqlresult as hash
-  def self.execute(sql, values = nil)
-    if values.nil?
+  def self.execute(sql, *values)
+    if values == []
       connect.execute(sql)
-    elsif values.class == Array
-      connect.execute(sql, values[0..-1])
+    elsif values[0].class == Array
+      connect.execute(sql, values[0][0..-1])
     else
-      connect.execute(sql, values)
+      connect.execute(sql, values[0..-1])
     end
   end
 

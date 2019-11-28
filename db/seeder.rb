@@ -28,6 +28,7 @@ class Seeder
     db.execute('DROP TABLE IF EXISTS users;')
     db.execute('DROP TABLE IF EXISTS platforms;')
     db.execute('DROP TABLE IF EXISTS connector;')
+    db.execute('DROP TABLE IF EXISTS booking_connector;')
   end
 
   def self.create_tables(db)
@@ -90,10 +91,20 @@ class Seeder
     db.execute <<-SQL
             CREATE TABLE "bookings" (
                 "id"                INTEGER PRIMARY KEY AUTOINCREMENT,
-                "user_id"           INTEGER NOT NULL,
+                "user_id"           INTEGER,
                 "price"             INTEGER NOT NULL,
                 "service_id"        INTEGER NOT NULL,
-                "booking_time"      TEXT NOT NULL
+                "booking_time"      TEXT NOT NULL,
+                "status"            INTEGER NOT NULL,
+                "session_id"        TEXT
+                );
+    SQL
+
+    db.execute <<-SQL
+            CREATE TABLE "booking_connector" (
+                "booking_id"        INTEGER NOT NULL,
+                "ticket_id"         INTEGER,
+                "amount"            INTEGER NOT NULL
                 );
     SQL
 
