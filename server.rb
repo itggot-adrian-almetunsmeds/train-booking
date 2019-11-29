@@ -15,14 +15,13 @@ class Server < Sinatra::Base
 
   before do
     if session[:user_id].is_a? Integer
-      @admin = User.admin?(session[:user_id])  
+      @admin = User.admin?(session[:user_id])
       @signed_in = true
     else
       @admin = false
       @signed_in = false
     end
   end
-
 
   get '/admin' do
     @trains = Trains.all
@@ -122,22 +121,22 @@ class Server < Sinatra::Base
     payload = JSON.parse(payload)['value']
     payload = JSON.parse(payload)
     tickets = []
-    query = ""
+    query = ''
     payload.each do |ticket|
       tickets << ticket['id']
       query += ' tickets.id = ? OR'
     end
-    query = query[0..-4]    
+    query = query[0..-4]
     service = back.split('/')
     # TODO: Price retrival does not return the correct value
     price = DBHandler.execute("SELECT SUM(price) from tickets WHERE #{query}", tickets[0..-1]).first['SUM(price)']
     DBHandler.execute('DELETE FROM bookings WHERE session_id = ?', session.id)
     if session[:user_id]
-    DBHandler.execute('INSERT INTO bookings (price, user_id, service_id, booking_time, status, session_id) VALUES (?,?,?,?,?,?)',
-                                              price, session[:user_id], service[-1].to_i, DateTime.now.to_s, 0, session.id)
+      DBHandler.execute('INSERT INTO bookings (price, user_id, service_id, booking_time, status, session_id) VALUES (?,?,?,?,?,?)',
+                        price, session[:user_id], service[-1].to_i, DateTime.now.to_s, 0, session.id)
     else
-    DBHandler.execute('INSERT INTO bookings (price, service_id, booking_time, status, session_id) VALUES (?,?,?,?,?)',
-                                              price, service[-1].to_i, DateTime.now.to_s, 0, session.id)
+      DBHandler.execute('INSERT INTO bookings (price, service_id, booking_time, status, session_id) VALUES (?,?,?,?,?)',
+                        price, service[-1].to_i, DateTime.now.to_s, 0, session.id)
     end
     booking = DBHandler.last('bookings').first
     payload.each do |ticket|
@@ -147,14 +146,7 @@ class Server < Sinatra::Base
   end
 
   get '/checkout' do
-    @booking = DBHandler.execute('SELECT * FROM bookings LEFT JOIN services ON bookings.service_id = services.id 
-      INNER JOIN platforms ON services.departure_id = platforms.id INNER JOIN services.arrival_id = platforms.id
-      
-      WHERE session_id = ?', session.id).first
-    @tickets = DBHandler.execute('SELECT * FROM booking_connector LEFT JOIN tickets ON booking_connector.ticket_id = tickets.id WHERE booking_id = ?', @booking['id'])
-    p @booking
-    p @tickets
-
+    @booking = Booking.new(session.id)
 
     # TODO: When booking has been completed remove the session_id from the db to prevent removing complete bookings
     # Also add rewardpoints when it has been completed
@@ -163,6 +155,13 @@ class Server < Sinatra::Base
   end
 
   post '/confirmticket' do
-    redirect '/'
+    booking = Booking.new(session.id)
+    # begin
+    booking.confirm
+    redirect 'booking'
+    # rescue
+    # session[:error_user] = "Unable to complete booking"
+    # redirect '/'
+    # end
   end
 end
