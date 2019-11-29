@@ -1,19 +1,22 @@
-h4= @booking
-h4= @tickets
+div#dep.data
+    h2 From #{@booking.departure_location} 
+    p Track: #{@booking.departure_track}
+    h4 Departure time: #{@booking.departure_time}
 
+div#arr.data
+    h2 To #{@booking.arrival_location}
+    p Track: #{@booking.arrival_track}
+    h4 Arrival time: #{@booking.arrival_time}
 
-
-h2 Departure: #{DateTime.strptime(@booking['departure_time'], '%s')}
-h2 Arrival: #{DateTime.strptime(@booking['arrival_time'], '%s')}
-
-- @tickets.each do |ticket|
+- @booking.tickets.each do |ticket, index|
     - @ticket = ticket
-    == slim :'templates/ticket'
-
+    - if @ticket.amount != 0
+        == slim :'templates/ticket'
 
 div#complete 
-    h2 Total: #{@booking['price']} SEK
+    h2 Total: #{@booking.total_price} SEK
+    h4 Points gained as a signed in user #{@booking.total_points}
 
 form action="/confirmticket" method="post"
     input type="hidden" name="confirm" value="true"/
-    button type="submit"
+    button type="submit" Confirm
