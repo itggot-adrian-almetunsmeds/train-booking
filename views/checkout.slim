@@ -1,11 +1,11 @@
 div#dep.data
     h2 From #{@booking.departure_location} 
-    p Track: #{@booking.departure_track}
+    p Track: #{@booking.departure_platform}
     h4 Departure time: #{@booking.departure_time}
 
 div#arr.data
     h2 To #{@booking.arrival_location}
-    p Track: #{@booking.arrival_track}
+    p Track: #{@booking.arrival_platform}
     h4 Arrival time: #{@booking.arrival_time}
 
 - @booking.tickets.each do |ticket, index|

@@ -6,7 +6,7 @@ require_relative 'modules/user'
 # require_relative 'modules/services'
 
 # Handeles server routes
-class Server < Sinatra::Base
+class Server < Sinatra::Base # rubocop:disable Metrics/ClassLength
   enable :sessions
   # Redirects a user visiting a admin page if they are not logged in and have admin rights
   before '/admin' do
@@ -72,10 +72,6 @@ class Server < Sinatra::Base
     @service['departure_time'] = DateTime.strptime(@service['departure_time'], '%s')
     @service['arrival_time'] = DateTime.strptime(@service['arrival_time'], '%s')
     @tickets = Service.tickets(params['id'])
-    # # p @tickets
-    # @tickets.each do |s|
-    #   # p s
-    # end
     slim :booking
   end
   ##########################################################################
@@ -84,15 +80,13 @@ class Server < Sinatra::Base
       user = User.new(params['email'])
       if BCrypt::Password.new(user.password) == params[:password]
         session[:user_id] = user.id
-        redirect back
       else
         session[:error_user] = 'There is no user with that password.'
-        redirect back
       end
     else
       session[:error_user] = 'There is no such user.'
-      redirect back
     end
+    redirect back
   end
 
   post '/register' do
@@ -118,46 +112,19 @@ class Server < Sinatra::Base
 
   post '/ticket' do
     payload = request.body.read
-    payload = JSON.parse(payload)['value']
-    payload = JSON.parse(payload)
-    tickets = []
-    query = ''
-    payload.each do |ticket|
-      tickets << ticket['id']
-      query += ' tickets.id = ? OR'
-    end
-    query = query[0..-4]
-    service = back.split('/')
-    # TODO: Price retrival does not return the correct value
-    price = DBHandler.execute("SELECT SUM(price) from tickets WHERE #{query}", tickets[0..-1]).first['SUM(price)']
-    DBHandler.execute('DELETE FROM bookings WHERE session_id = ?', session.id)
-    if session[:user_id]
-      DBHandler.execute('INSERT INTO bookings (price, user_id, service_id, booking_time, status, session_id) VALUES (?,?,?,?,?,?)',
-                        price, session[:user_id], service[-1].to_i, DateTime.now.to_s, 0, session.id)
-    else
-      DBHandler.execute('INSERT INTO bookings (price, service_id, booking_time, status, session_id) VALUES (?,?,?,?,?)',
-                        price, service[-1].to_i, DateTime.now.to_s, 0, session.id)
-    end
-    booking = DBHandler.last('bookings').first
-    payload.each do |ticket|
-      DBHandler.execute('INSERT INTO booking_connector (booking_id, ticket_id, amount) VALUES (?,?, ?)', booking['id'], ticket['id'], ticket['amount'])
-    end
+    Booking.create(payload, session, back)
     '/checkout'
   end
 
   get '/checkout' do
     @booking = Booking.new(session.id)
-
-    # TODO: When booking has been completed remove the session_id from the db to prevent removing complete bookings
-    # Also add rewardpoints when it has been completed
-
     slim :checkout
   end
 
   post '/confirmticket' do
     booking = Booking.new(session.id)
     # begin
-    booking.confirm
+    booking.confirm(booking, session[:user_id])
     redirect 'booking'
     # rescue
     # session[:error_user] = "Unable to complete booking"
