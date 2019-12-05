@@ -1,3 +1,4 @@
+![Docs](https://github.com/itggot-adrian-almetunsmeds/train-booking/workflows/Docs/badge.svg)
 ![Rubocop Linting](https://github.com/itggot-adrian-almetunsmeds/train-booking/workflows/Linting/badge.svg)
 ![Tests](https://github.com/itggot-adrian-almetunsmeds/train-booking/workflows/Tests/badge.svg)
 
@@ -19,7 +20,7 @@ A digital platform where customers can book train tickets.
 * <i>Collect points</i> on bookings
 * Signed-in users have the ability to <i>cancel their booking</i>
 
-#### Administrator
+#### Administrators
 * Administrators have the ability to <i>change points</i> of users and <i>cancel user bookings</i>
 * See all bookings made to a specific service
 
