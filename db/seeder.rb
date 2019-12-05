@@ -2,7 +2,10 @@
 
 require 'sqlite3'
 
+# Handles seeding/generation of db
 class Seeder
+
+  # Seeds the database
   def self.seed!
     db = connect
     drop_tables(db)
@@ -13,10 +16,14 @@ class Seeder
     puts 'Populated tables'
   end
 
+  # Connects to the db
   def self.connect
     SQLite3::Database.new 'db/data.db'
   end
 
+  # Drops tables if they excist
+  # 
+  # db - (database Object)
   def self.drop_tables(db)
     db.execute('DROP TABLE IF EXISTS tickets;')
     db.execute('DROP TABLE IF EXISTS train_types;')
@@ -31,6 +38,9 @@ class Seeder
     db.execute('DROP TABLE IF EXISTS booking_connector;')
   end
 
+  # Creates tables in the db
+  # 
+  # db - (database Object)
   def self.create_tables(db)
     db.execute <<-SQL
             CREATE TABLE "tickets" (
@@ -136,6 +146,9 @@ class Seeder
     SQL
   end
 
+  # Populates tables with data
+  # 
+  # db - (database Object)
   def self.populate_tables(db)
     connector = [
       {ticket_id: 1, service_id: 1},

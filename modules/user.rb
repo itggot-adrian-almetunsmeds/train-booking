@@ -3,21 +3,27 @@
 require_relative 'db_handler'
 require 'bcrypt'
 
+# Handles the user
 class User < DBHandler
   attr_reader :id, :first_name, :last_name, :email, :points, :admin, :password
   attr_writer :first_name, :last_name, :email, :points
 
   # Creates a new user or opens a excisting one
-  # options - Integer(id), String(email)
+  #
+  # Options - Integer(id), String(email)
+  # Options - Hash containing first_name, last_name
+  # email, password
+  #
   # Returns instance variables containg user data
-  def initialize(options = {})
+  # rubocop:disable Metrics/MethodLength
+  def initialize(options = {}) # rubocop:disable Metrics/AbcSize
     if options.is_a?(Integer) || options.is_a?(String)
-      user = if options.is_a? String
-               DBHandler.with_condition 'users', 'WHERE email = ?', options
+      user = if options.is_a?(String) && options.to_f.to_s != options
+               # TODO: Make sure a new user provides a valid email
+               DBHandler.with_condition('users', 'WHERE email = ?', options).first
              else
                DBHandler.with_id 'users', options
              end
-      user = user.first
       @id = user['id']
       @first_name = user['first_name']
       @last_name = user['last_name']
@@ -35,7 +41,13 @@ class User < DBHandler
       @id = (DBHandler.write_to_db 'users', self).first['id']
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
+  # Determines if there is a user with a specific email adress
+  #
+  # email - User email (String)
+  #
+  # Returns weather there is already a user with that email
   def self.excists?(email)
     if (with_condition 'users', 'WHERE email = ?', email).first
       true
@@ -44,6 +56,11 @@ class User < DBHandler
     end
   end
 
+  # Determines if the user has admin rights
+  #
+  # id - User id (Integer)
+  #
+  # Returns true or false
   def self.admin?(id)
     temp = with_id 'users', id
     temp['admin'] == 1

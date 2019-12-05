@@ -2,6 +2,7 @@
 
 require_relative 'db_handler'
 
+# Handles everything relating to tickets
 class Ticket
   attr_reader :name, :price, :total_points, :points, :total_price, :amount
 
