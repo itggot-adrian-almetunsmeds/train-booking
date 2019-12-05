@@ -68,7 +68,8 @@ class DBHandler
   # object - Object to be written to table
   #
   # Returns the id of the new record (most of the time)
-  def self.write_to_db(table, object)
+  # rubocop:disable Metrics/MethodLength
+  def self.write_to_db(table, object) # rubocop:disable Metrics/AbcSize
     z = object.instance_variables
     q = []
     k = []
@@ -91,21 +92,44 @@ class DBHandler
     execute("INSERT INTO #{table} (#{k}) VALUES (#{x})", q)
     last(table)
   end
+  # rubocop:enable Metrics/MethodLength
 
-  def save(table, object)
-    z = object.instance_variables
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+  def save(table = nil, options = nil) # rubocop:disable Metrics/CyclomaticComplexity
+    p options
+    object = if options.nil? || options['object'].nil?
+               self
+             else
+               options['object']
+             end
     q = []
     k = []
-    z.each_with_index do |_, i|
-      q << object.instance_variable_get(z[i])
-      k << z[i].to_s.gsub('@', '') unless z[i].to_s.gsub('@', '') == 'id'
+    if options.nil? || options[:params].nil?
+      z = object.instance_variables
+      z.each_with_index do |_, i|
+        q << object.instance_variable_get(z[i]) unless z[i].to_s.gsub('@', '') == 'id'
+        k << z[i].to_s.gsub('@', '') unless z[i].to_s.gsub('@', '') == 'id'
+      end
+      q << object.id
+    else
+      options[:params].each do |param|
+        q << param[:value]
+        k << param[:key]
+      end
     end
     u = ''
     k.each_with_index do |_, i|
       u += "#{k[i]} = ?,"
     end
+    q << options[:id] if !options.nil? && !options[:params].nil?
+
     u = u.chomp(',')
     DBHandler.execute("UPDATE #{table} SET #{u} WHERE id = ?", q)
-    # TODO: Can this be made to self.execute or similar?
+    # TODO: Can this be made to self.save or similar?
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/PerceivedComplexity
 end
