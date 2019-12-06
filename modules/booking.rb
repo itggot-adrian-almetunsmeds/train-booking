@@ -2,6 +2,7 @@
 
 require_relative 'db_handler'
 require_relative 'tickets'
+require_relative 'seats'
 
 # Handles all bookings
 class Booking < DBHandler
@@ -12,34 +13,65 @@ class Booking < DBHandler
   attr_writer :total_price, :status, :session_id, :user_id
 
   # rubocop:disable Metrics/MethodLength
-  def initialize(session_id) # rubocop:disable Metrics/AbcSize
-    data = DBHandler.execute(
-      'SELECT bookings.id, bookings.status, bookings.session_id, bookings.id, user_id,' \
-      ' departure.name AS departure_location, arrival.name AS arrival_location,'\
-      ' dep.name AS departure_platform, arr.name AS arrival_platform, tickets.name AS ticket_name,'\
-      ' arrival_time, departure_time, points, amount, tickets.id AS ticket_id,'\
-      ' bookings.price as booking_price'\
-      ' FROM bookings'\
-      ' LEFT JOIN booking_connector'\
-      ' ON bookings.id = booking_connector.booking_id'\
-      ' LEFT JOIN tickets'\
-      ' ON booking_connector.ticket_id = tickets.id'\
-      ' LEFT JOIN services'\
-      ' ON bookings.service_id = services.id'\
-      ' LEFT JOIN platforms AS dep'\
-      ' ON services.departure_id = dep.id'\
-      ' LEFT JOIN platforms AS arr'\
-      ' ON services.arrival_id = arr.id'\
-      ' LEFT JOIN destinations as arrival'\
-      ' ON arr.destination_id = arrival.id'\
-      ' LEFT JOIN destinations as departure'\
-      ' ON dep.destination_id = departure.id'\
-      ' WHERE session_id = ?', session_id
-    )
+  def initialize(id) # rubocop:disable Metrics/AbcSize
+    if id.is_a? String
+      data = DBHandler.execute(
+        'SELECT bookings.id, bookings.status, bookings.session_id, bookings.id, user_id,' \
+        ' departure.name AS departure_location, arrival.name AS arrival_location,'\
+        ' dep.name AS departure_platform, arr.name AS arrival_platform, tickets.name AS ticket_name,'\
+        ' arrival_time, departure_time, points, amount, tickets.id AS ticket_id,'\
+        ' bookings.price as booking_price, bookings.service_id'\
+        ' FROM bookings'\
+        ' LEFT JOIN booking_connector'\
+        ' ON bookings.id = booking_connector.booking_id'\
+        ' LEFT JOIN tickets'\
+        ' ON booking_connector.ticket_id = tickets.id'\
+        ' LEFT JOIN services'\
+        ' ON bookings.service_id = services.id'\
+        ' LEFT JOIN platforms AS dep'\
+        ' ON services.departure_id = dep.id'\
+        ' LEFT JOIN platforms AS arr'\
+        ' ON services.arrival_id = arr.id'\
+        ' LEFT JOIN destinations as arrival'\
+        ' ON arr.destination_id = arrival.id'\
+        ' LEFT JOIN destinations as departure'\
+        ' ON dep.destination_id = departure.id'\
+        ' WHERE session_id = ?', id
+      )
+    else
+      data = DBHandler.execute(
+        'SELECT bookings.id, bookings.status, bookings.session_id, bookings.id, user_id,' \
+        ' departure.name AS departure_location, arrival.name AS arrival_location,'\
+        ' dep.name AS departure_platform, arr.name AS arrival_platform, tickets.name AS ticket_name,'\
+        ' arrival_time, departure_time, points, amount, tickets.id AS ticket_id,'\
+        ' bookings.price as booking_price, bookings.service_id'\
+        ' FROM bookings'\
+        ' LEFT JOIN booking_connector'\
+        ' ON bookings.id = booking_connector.booking_id'\
+        ' LEFT JOIN tickets'\
+        ' ON booking_connector.ticket_id = tickets.id'\
+        ' LEFT JOIN services'\
+        ' ON bookings.service_id = services.id'\
+        ' LEFT JOIN platforms AS dep'\
+        ' ON services.departure_id = dep.id'\
+        ' LEFT JOIN platforms AS arr'\
+        ' ON services.arrival_id = arr.id'\
+        ' LEFT JOIN destinations as arrival'\
+        ' ON arr.destination_id = arrival.id'\
+        ' LEFT JOIN destinations as departure'\
+        ' ON dep.destination_id = departure.id'\
+        ' WHERE bookings.id = ?', id
+      )
+  end
     @tickets = []
     @total_points = 0
     data.each do |z|
       ticket = Ticket.new(z['ticket_id'], z['amount'])
+      seat = Seat.booked_seat z['id'], z['service_id']
+      ticket = Objects.merge( seat, ticket)
+
+      ticket.instance_variables.each {|k| self.class.send(:attr_reader, k.to_s[1..-1].to_sym)}
+p ticket.inspect
       tickets << ticket
       @total_points += ticket.total_points
     end
@@ -71,6 +103,7 @@ class Booking < DBHandler
     booking.save 'bookings', params: [{ key: 'status', value: booking.status },
                                       { key: 'session_id', value: booking.session_id },
                                       { key: 'user_id', value: booking.user_id }], id: booking.id
+    booking.id
   end
 
   # rubocop:disable Metrics/MethodLength
@@ -85,6 +118,7 @@ class Booking < DBHandler
     end
     query = query[0..-4]
     service = back.split('/')
+
     price = DBHandler.execute("SELECT price, id from tickets WHERE #{query}",
                               tickets[0..-1])
     price_sum = 0
@@ -109,6 +143,7 @@ class Booking < DBHandler
     end
     booking = DBHandler.last('bookings').first
     payload.each do |ticket|
+      Seat.reserve(ticket['amount'].to_i, service[-1].to_i, booking['id'])
       DBHandler.execute('INSERT INTO booking_connector (booking_id, ticket_id, amount) '\
               'VALUES (?,?, ?)', booking['id'], ticket['id'], ticket['amount'])
     end

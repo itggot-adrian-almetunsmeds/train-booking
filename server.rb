@@ -124,11 +124,18 @@ class Server < Sinatra::Base # rubocop:disable Metrics/ClassLength
   post '/confirmticket' do
     booking = Booking.new(session.id)
     # begin
-    booking.confirm(booking, session[:user_id])
-    redirect 'booking'
+    booking_id = booking.confirm(booking, session[:user_id])
+    session[:booking_id] = booking_id
+    redirect 'booking-complete'
     # rescue
     # session[:error_user] = "Unable to complete booking"
     # redirect '/'
     # end
+  end
+
+  get '/booking-complete' do
+    p "Booking id: #{session[:booking_id]}"
+    @booking = Booking.new(session[:booking_id].to_i)
+    slim :bookings
   end
 end

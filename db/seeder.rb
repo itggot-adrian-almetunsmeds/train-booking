@@ -29,6 +29,7 @@ class Seeder
     db.execute('DROP TABLE IF EXISTS train_types;')
     db.execute('DROP TABLE IF EXISTS trains;')
     db.execute('DROP TABLE IF EXISTS seats;')
+    db.execute('DROP TABLE IF EXISTS seats_connector;')
     db.execute('DROP TABLE IF EXISTS services;')
     db.execute('DROP TABLE IF EXISTS destinations;')
     db.execute('DROP TABLE IF EXISTS bookings;')
@@ -74,7 +75,7 @@ class Seeder
                 "id"                INTEGER PRIMARY KEY AUTOINCREMENT,
                 "service_id"        INTEGER NOT NULL,
                 "occupied"          INTEGER NOT NULL DEFAULT 0,
-                "booking_id"        INTEGER NOT NULL
+                "booking_id"        INTEGER NOT NULL DEFAULT 0
             );
     SQL
 
@@ -115,6 +116,14 @@ class Seeder
                 "booking_id"        INTEGER NOT NULL,
                 "ticket_id"         INTEGER,
                 "amount"            INTEGER NOT NULL
+                );
+    SQL
+
+    db.execute <<-SQL
+            CREATE TABLE "seats_connector" (
+                "seat_id"              INTEGER NOT NULL,
+                "service_id"           INTEGER NOT NULL,
+                "booking_id"           INTEGER NOT NULL
                 );
     SQL
 
@@ -163,6 +172,7 @@ class Seeder
       {ticket_id: 4, service_id: 2},
       {ticket_id: 4, service_id: 1}
     ]
+
     tickets = [
       { name: '1a Klass +', price: 380, points: 100 },
       { name: '1a Klass', price: 250, points: 100 },
@@ -198,6 +208,109 @@ class Seeder
       {train_id: '2', name: 'Snabbare', departure_id: 1, departure_time: (DateTime.now + 1).to_time.to_i, arrival_id: 3, arrival_time: (DateTime.now + 2).to_time.to_i, empty_seats: 120},
       {train_id: '2', name: 'Snabb Express delux', departure_id: 1, departure_time: DateTime.now.to_time.to_i, arrival_id: 2, arrival_time: (DateTime.now + 2).to_time.to_i, empty_seats: 120}
     ]
+
+    seats = [
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 3},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 1},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2},
+      {service_id: 2}
+    ]
+
+    trains = [
+      {type_id: 1},
+      {type_id: 2},
+      {type_id: 2},
+      {type_id: 1},
+      {type_id: 3},
+      {type_id: 2},
+      {type_id: 2},
+      {type_id: 1},
+      {type_id: 2},
+      {type_id: 4},
+      {type_id: 4},
+      {type_id: 4},
+      {type_id: 2}
+    ]
+
+    seats.each do |d|
+      db.execute('INSERT INTO seats (service_id) VALUES (?)', d[:service_id])
+    end
+
+    trains.each do |d|
+      db.execute('INSERT INTO trains (type_id) VALUES (?)', d[:type_id])
+    end
 
     connector.each do |d|
       db.execute('INSERT INTO connector (service_id, ticket_id) VALUES (?,?)', d[:service_id], d[:ticket_id])
