@@ -1,0 +1,24 @@
+p= @booking.inspect
+- @booking.tickets.each do |ticket|
+  .ticket
+    h3 #{@booking.departure_location} - #{@booking.arrival_location} #{ticket.name}
+    .holder style="display: flex;"
+      .table
+        table
+          th Departure
+          tr
+            td= @booking.departure_time
+          tr
+            td= @booking.departure_platform
+      .table
+        table
+          th Arrival
+          tr
+            td= @booking.arrival_time
+          tr
+            td= @booking.arrival_platform
+      .table
+        table
+          th Seat
+          tr
+            td = ticket.seat_id
