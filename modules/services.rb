@@ -12,6 +12,10 @@ class Service < DBHandler
     super('services', id)
   end
 
+  def self.update_empty_seats(id)
+    execute 'UPDATE services SET empty_seats = (SELECT COUNT(occupied) FROM seats WHERE service_id = ? AND occupied = 0) WHERE id = ?', id, id
+  end
+
   # rubocop:disable Metrics/MethodLength
   def self.search(params) # rubocop:disable Metrics/AbcSize
     params['dep'] = '%' + params['dep'] + '%'
