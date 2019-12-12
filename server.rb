@@ -112,8 +112,13 @@ class Server < Sinatra::Base # rubocop:disable Metrics/ClassLength
 
   post '/ticket' do
     payload = request.body.read
-    Booking.create(payload, session, back)
-    '/checkout'
+    begin
+      Booking.create(payload, session, back)
+      '/checkout'
+    rescue StandardError
+      session[:error_user] = 'Unable to complete booking'
+      '/'
+    end
   end
 
   get '/checkout' do
