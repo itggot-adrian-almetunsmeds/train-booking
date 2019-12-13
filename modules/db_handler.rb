@@ -54,16 +54,18 @@ class DBHandler
     object_constructor execute(sqlquery, values[0..-1])
   end
 
+  # Converts hash inside of array to instancevariables.
+  #
+  # Returns an array of instance variables
   def self.object_constructor(array)
     array.each do |hash|
       hash.each do |string, value|
         string = string.to_s.gsub('.', '_')
         instance_variable_set("@#{string}", value)
-        p string
-        send(attr_accessor) # TODO: Set attribute accessor for object
+        self.class.send(:attr_reader, string.to_sym)
       end
     end
-    # p self.instance_variables()[0]
+    instance_variables
   end
 
   # Decides if the provided argument has to be processed before execution
