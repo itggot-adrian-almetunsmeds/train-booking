@@ -434,7 +434,8 @@
 153
 154
 155
-156</pre>
+156
+157</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'db/seeder.rb', line 45</span>
@@ -520,7 +521,8 @@
 <span class='tstring_content'>          CREATE TABLE &quot;seats_connector&quot; (
               &quot;seat_id&quot;              INTEGER NOT NULL,
               &quot;service_id&quot;           INTEGER NOT NULL,
-              &quot;booking_id&quot;           INTEGER NOT NULL
+              &quot;booking_id&quot;           INTEGER NOT NULL,
+              &quot;ticket_id&quot;            INTEGER NOT NULL
               );
 </span><span class='heredoc_end'>  SQL
 </span>
@@ -649,7 +651,6 @@
       <pre class="lines">
 
 
-161
 162
 163
 164
@@ -866,10 +867,11 @@
 375
 376
 377
-378</pre>
+378
+379</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 161</span>
+      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 162</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_populate_tables'>populate_tables</span><span class='lparen'>(</span><span class='id identifier rubyid_db'>db</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_connector'>connector</span> <span class='op'>=</span> <span class='lbracket'>[</span>
@@ -1152,7 +1154,7 @@
 </div>
 
       <div id="footer">
-  Generated on Fri Dec  6 23:02:55 2019 by
+  Generated on Fri Dec 13 09:46:01 2019 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.20 (ruby-2.6.3).
 </div>
