@@ -3,8 +3,8 @@ require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:spec) 
 
+task :test => :spec
+
 task :seed do
     require_relative 'db/seeder.rb'
 end
-
-task :test => :spec
