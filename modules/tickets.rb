@@ -4,7 +4,7 @@ require_relative 'db_handler'
 
 # Handles everything relating to tickets
 class Ticket
-  attr_reader :name, :price, :total_points, :points, :total_price, :amount
+  attr_reader :name, :price, :total_points, :points, :total_price, :amount, :seat_id
 
   def initialize(ticket_id, amount = 1)
     data = DBHandler.with_id('tickets', ticket_id)

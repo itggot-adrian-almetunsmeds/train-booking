@@ -1,4 +1,3 @@
-p= @booking.inspect
 - @booking.tickets.each do |ticket|
   .ticket
     h3 #{@booking.departure_location} - #{@booking.arrival_location} #{ticket.name}
@@ -9,16 +8,26 @@ p= @booking.inspect
           tr
             td= @booking.departure_time
           tr
-            td= @booking.departure_platform
+            td= 'Platform ' + @booking.departure_platform
       .table
         table
           th Arrival
           tr
             td= @booking.arrival_time
           tr
-            td= @booking.arrival_platform
+            td= 'Platform ' + @booking.arrival_platform
       .table
         table
           th Seat
           tr
-            td = ticket.seat_id
+            - if ticket.seat_id.is_a? Array
+              - seat = ''
+              - ticket.seat_id.each_with_index do |seat_value, index|
+                - if index == 0
+                  - seat = "#{seat_value}"
+                - else
+                  - seat = "#{seat}, #{seat_value}"
+              td= seat
+            - else
+              td= ticket.seat_id
+            

@@ -66,12 +66,13 @@ class Booking < DBHandler
     @tickets = []
     @total_points = 0
     data.each do |z|
-      ticket = Ticket.new(z['ticket_id'], z['amount'])
-      seat = Seat.booked_seat z['id'], z['service_id']
-      ticket = Objects.merge( seat, ticket)
+      next if z['amount'] == 0
 
-      ticket.instance_variables.each {|k| self.class.send(:attr_reader, k.to_s[1..-1].to_sym)}
-p ticket.inspect
+      ticket = Ticket.new(z['ticket_id'], z['amount'])
+      seat = Seat.booked_seats_ticket z['id'], z['ticket_id']
+      ticket = Objects.merge(seat, ticket)
+
+      ticket.instance_variables.each { |k| self.class.send(:attr_reader, k.to_s[1..-1].to_sym) }
       tickets << ticket
       @total_points += ticket.total_points
     end
@@ -113,8 +114,10 @@ p ticket.inspect
     tickets = []
     query = ''
     payload.each do |ticket|
-      tickets << ticket['id']
-      query += ' tickets.id = ? OR'
+      unless ticket['amount'].to_i == 0
+        tickets << ticket['id']
+        query += ' tickets.id = ? OR'
+      end
     end
     query = query[0..-4]
     service = back.split('/')
@@ -143,7 +146,9 @@ p ticket.inspect
     end
     booking = DBHandler.last('bookings').first
     payload.each do |ticket|
-      Seat.reserve(ticket['amount'].to_i, service[-1].to_i, booking['id'])
+      next if ticket['amount'].to_i == 0
+
+      Seat.reserve(ticket['amount'].to_i, service[-1].to_i, booking['id'], ticket['id'])
       DBHandler.execute('INSERT INTO booking_connector (booking_id, ticket_id, amount) '\
               'VALUES (?,?, ?)', booking['id'], ticket['id'], ticket['amount'])
     end

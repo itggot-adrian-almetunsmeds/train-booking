@@ -11,18 +11,48 @@ end
 
 class Seat < DBHandler
   def initialize(things)
-    things.each do |k, v|
-      instance_variable_set("@#{k}", v)
-      self.class.send(:attr_reader, k)
+    things.each do |k|
+      k.each do |s, v|
+        if !instance_variable_get("@#{s}").nil?
+          value = instance_variable_get("@#{s}")
+          if value.is_a? Array
+            value << v
+          else
+            value = [value, v] unless value == v
+          end
+          instance_variable_set("@#{s}", value)
+        else
+          instance_variable_set("@#{s}", v)
+        end
+        self.class.send(:attr_reader, s.to_sym)
+      end
     end
   end
 
   def self.booked_seats(booking_id)
-    execute 'SELECT * FROM seats_connector WHERE booking_id = ?', booking_id
+    seats_hash = execute 'SELECT * FROM seats_connector WHERE booking_id = ?', booking_id
+    seats_array = []
+    seats_hash.each do |k|
+      seats_array << k
+      p 'This is k'
+      p k
+    end
+    new seats_array
+  end
+
+  def self.booked_seats_ticket(booking_id, ticket_id)
+    seats_hash = execute 'SELECT * FROM seats_connector WHERE booking_id = ? AND ticket_id = ?', booking_id, ticket_id
+    seats_array = []
+    seats_hash.each do |k|
+      seats_array << k
+    end
+    new seats_array
   end
 
   def self.booked_seat(booking_id, service_id)
-    self.new execute('SELECT * FROM seats_connector WHERE booking_id = ? AND service_id = ?', booking_id, service_id).first
+    x = execute('SELECT * FROM seats_connector WHERE booking_id = ? AND service_id = ?', booking_id, service_id)
+    # p x
+    new x
   end
 
   def self.fetch(id)
@@ -41,7 +71,7 @@ class Seat < DBHandler
     execute('SELECT COUNT(id) FROM seats WHERE occupied = 0').first ? true : false
   end
 
-  def self.reserve(amount, service_id, boocking_id)
+  def self.reserve(amount, service_id, boocking_id, ticket_id)
     seats = get_empty_seats service_id
     reserved = []
     amount = amount.to_i
@@ -54,9 +84,10 @@ class Seat < DBHandler
 
       assign seat['id']
       reserved << seat['id']
-      execute 'INSERT INTO seats_connector (seat_id, service_id, booking_id) VALUES (?,?,?)',
-              seat['id'], service_id, boocking_id
+      execute 'INSERT INTO seats_connector (seat_id, service_id, booking_id, ticket_id) VALUES (?,?,?,?)',
+              seat['id'], service_id, boocking_id, ticket_id
     end
+    Service.update_empty_seats service_id
     reserved
   end
 
