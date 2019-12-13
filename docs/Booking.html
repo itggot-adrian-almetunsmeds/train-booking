@@ -655,7 +655,7 @@
   
   
   <h3 class="inherited">Methods inherited from <span class='object_link'><a href="DBHandler.html" title="DBHandler (class)">DBHandler</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="DBHandler.html#all-class_method" title="DBHandler.all (method)">all</a></span>, <span class='object_link'><a href="DBHandler.html#connect-class_method" title="DBHandler.connect (method)">connect</a></span>, <span class='object_link'><a href="DBHandler.html#execute-class_method" title="DBHandler.execute (method)">execute</a></span>, <span class='object_link'><a href="DBHandler.html#last-class_method" title="DBHandler.last (method)">last</a></span>, <span class='object_link'><a href="DBHandler.html#save-instance_method" title="DBHandler#save (method)">#save</a></span>, <span class='object_link'><a href="DBHandler.html#with_condition-class_method" title="DBHandler.with_condition (method)">with_condition</a></span>, <span class='object_link'><a href="DBHandler.html#with_id-class_method" title="DBHandler.with_id (method)">with_id</a></span>, <span class='object_link'><a href="DBHandler.html#write_to_db-class_method" title="DBHandler.write_to_db (method)">write_to_db</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="DBHandler.html#all-class_method" title="DBHandler.all (method)">all</a></span>, <span class='object_link'><a href="DBHandler.html#connect-class_method" title="DBHandler.connect (method)">connect</a></span>, <span class='object_link'><a href="DBHandler.html#execute-class_method" title="DBHandler.execute (method)">execute</a></span>, <span class='object_link'><a href="DBHandler.html#join_constructor-class_method" title="DBHandler.join_constructor (method)">join_constructor</a></span>, <span class='object_link'><a href="DBHandler.html#last-class_method" title="DBHandler.last (method)">last</a></span>, <span class='object_link'><a href="DBHandler.html#object_constructor-class_method" title="DBHandler.object_constructor (method)">object_constructor</a></span>, <span class='object_link'><a href="DBHandler.html#save-instance_method" title="DBHandler#save (method)">#save</a></span>, <span class='object_link'><a href="DBHandler.html#select_constructor-class_method" title="DBHandler.select_constructor (method)">select_constructor</a></span>, <span class='object_link'><a href="DBHandler.html#sql_operator-class_method" title="DBHandler.sql_operator (method)">sql_operator</a></span>, <span class='object_link'><a href="DBHandler.html#sql_operator!-class_method" title="DBHandler.sql_operator! (method)">sql_operator!</a></span>, <span class='object_link'><a href="DBHandler.html#with_condition-class_method" title="DBHandler.with_condition (method)">with_condition</a></span>, <span class='object_link'><a href="DBHandler.html#with_id-class_method" title="DBHandler.with_id (method)">with_id</a></span>, <span class='object_link'><a href="DBHandler.html#write_to_db-class_method" title="DBHandler.write_to_db (method)">write_to_db</a></span></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
@@ -760,7 +760,8 @@
 88
 89
 90
-91</pre>
+91
+92</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'modules/booking.rb', line 16</span>
@@ -818,12 +819,13 @@
   <span class='ivar'>@tickets</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
   <span class='ivar'>@total_points</span> <span class='op'>=</span> <span class='int'>0</span>
   <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_z'>z</span><span class='op'>|</span>
-    <span class='id identifier rubyid_ticket'>ticket</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Ticket.html" title="Ticket (class)">Ticket</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Ticket.html#initialize-instance_method" title="Ticket#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_z'>z</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ticket_id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_z'>z</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>amount</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_seat'>seat</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Seat.html" title="Seat (class)">Seat</a></span></span><span class='period'>.</span><span class='id identifier rubyid_booked_seat'><span class='object_link'><a href="Seat.html#booked_seat-class_method" title="Seat.booked_seat (method)">booked_seat</a></span></span> <span class='id identifier rubyid_z'>z</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_z'>z</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>service_id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-    <span class='id identifier rubyid_ticket'>ticket</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Objects.html" title="Objects (class)">Objects</a></span></span><span class='period'>.</span><span class='id identifier rubyid_merge'><span class='object_link'><a href="Objects.html#merge-class_method" title="Objects.merge (method)">merge</a></span></span><span class='lparen'>(</span> <span class='id identifier rubyid_seat'>seat</span><span class='comma'>,</span> <span class='id identifier rubyid_ticket'>ticket</span><span class='rparen'>)</span>
+    <span class='kw'>next</span> <span class='kw'>if</span> <span class='id identifier rubyid_z'>z</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>amount</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='int'>0</span>
 
-    <span class='id identifier rubyid_ticket'>ticket</span><span class='period'>.</span><span class='id identifier rubyid_instance_variables'>instance_variables</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='op'>|</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:attr_reader</span><span class='comma'>,</span> <span class='id identifier rubyid_k'>k</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lbracket'>[</span><span class='int'>1</span><span class='op'>..</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rparen'>)</span><span class='rbrace'>}</span>
-<span class='id identifier rubyid_p'>p</span> <span class='id identifier rubyid_ticket'>ticket</span><span class='period'>.</span><span class='id identifier rubyid_inspect'>inspect</span>
+    <span class='id identifier rubyid_ticket'>ticket</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Ticket.html" title="Ticket (class)">Ticket</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Ticket.html#initialize-instance_method" title="Ticket#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_z'>z</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ticket_id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_z'>z</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>amount</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_seat'>seat</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Seat.html" title="Seat (class)">Seat</a></span></span><span class='period'>.</span><span class='id identifier rubyid_booked_seats_ticket'><span class='object_link'><a href="Seat.html#booked_seats_ticket-class_method" title="Seat.booked_seats_ticket (method)">booked_seats_ticket</a></span></span> <span class='id identifier rubyid_z'>z</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_z'>z</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ticket_id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_ticket'>ticket</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Objects.html" title="Objects (class)">Objects</a></span></span><span class='period'>.</span><span class='id identifier rubyid_merge'><span class='object_link'><a href="Objects.html#merge-class_method" title="Objects.merge (method)">merge</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_seat'>seat</span><span class='comma'>,</span> <span class='id identifier rubyid_ticket'>ticket</span><span class='rparen'>)</span>
+
+    <span class='id identifier rubyid_ticket'>ticket</span><span class='period'>.</span><span class='id identifier rubyid_instance_variables'>instance_variables</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='op'>|</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:attr_reader</span><span class='comma'>,</span> <span class='id identifier rubyid_k'>k</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lbracket'>[</span><span class='int'>1</span><span class='op'>..</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
     <span class='id identifier rubyid_tickets'>tickets</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_ticket'>ticket</span>
     <span class='ivar'>@total_points</span> <span class='op'>+=</span> <span class='id identifier rubyid_ticket'>ticket</span><span class='period'>.</span><span class='id identifier rubyid_total_points'>total_points</span>
   <span class='kw'>end</span>
@@ -1529,7 +1531,6 @@
       <pre class="lines">
 
 
-110
 111
 112
 113
@@ -1569,10 +1570,15 @@
 147
 148
 149
-150</pre>
+150
+151
+152
+153
+154
+155</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/booking.rb', line 110</span>
+      <pre class="code"><span class="info file"># File 'modules/booking.rb', line 111</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='id identifier rubyid_payload'>payload</span><span class='comma'>,</span> <span class='id identifier rubyid_session'>session</span><span class='comma'>,</span> <span class='id identifier rubyid_back'>back</span><span class='rparen'>)</span> <span class='comment'># rubocop:disable Metrics/AbcSize
 </span>  <span class='id identifier rubyid_payload'>payload</span> <span class='op'>=</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_payload'>payload</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>value</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
@@ -1580,8 +1586,10 @@
   <span class='id identifier rubyid_tickets'>tickets</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_query'>query</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
   <span class='id identifier rubyid_payload'>payload</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ticket'>ticket</span><span class='op'>|</span>
-    <span class='id identifier rubyid_tickets'>tickets</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_ticket'>ticket</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
-    <span class='id identifier rubyid_query'>query</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> tickets.id = ? OR</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>unless</span> <span class='id identifier rubyid_ticket'>ticket</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>amount</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>==</span> <span class='int'>0</span>
+      <span class='id identifier rubyid_tickets'>tickets</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_ticket'>ticket</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+      <span class='id identifier rubyid_query'>query</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> tickets.id = ? OR</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>end</span>
   <span class='kw'>end</span>
   <span class='id identifier rubyid_query'>query</span> <span class='op'>=</span> <span class='id identifier rubyid_query'>query</span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='op'>-</span><span class='int'>4</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_service'>service</span> <span class='op'>=</span> <span class='id identifier rubyid_back'>back</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>/</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
@@ -1610,7 +1618,9 @@
   <span class='kw'>end</span>
   <span class='id identifier rubyid_booking'>booking</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DBHandler.html" title="DBHandler (class)">DBHandler</a></span></span><span class='period'>.</span><span class='id identifier rubyid_last'><span class='object_link'><a href="DBHandler.html#last-class_method" title="DBHandler.last (method)">last</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>bookings</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
   <span class='id identifier rubyid_payload'>payload</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ticket'>ticket</span><span class='op'>|</span>
-    <span class='const'><span class='object_link'><a href="Seat.html" title="Seat (class)">Seat</a></span></span><span class='period'>.</span><span class='id identifier rubyid_reserve'><span class='object_link'><a href="Seat.html#reserve-class_method" title="Seat.reserve (method)">reserve</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_ticket'>ticket</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>amount</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='id identifier rubyid_service'>service</span><span class='lbracket'>[</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='id identifier rubyid_booking'>booking</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='kw'>next</span> <span class='kw'>if</span> <span class='id identifier rubyid_ticket'>ticket</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>amount</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>==</span> <span class='int'>0</span>
+
+    <span class='const'><span class='object_link'><a href="Seat.html" title="Seat (class)">Seat</a></span></span><span class='period'>.</span><span class='id identifier rubyid_reserve'><span class='object_link'><a href="Seat.html#reserve-class_method" title="Seat.reserve (method)">reserve</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_ticket'>ticket</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>amount</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='id identifier rubyid_service'>service</span><span class='lbracket'>[</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='id identifier rubyid_booking'>booking</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_ticket'>ticket</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
     <span class='const'><span class='object_link'><a href="DBHandler.html" title="DBHandler (class)">DBHandler</a></span></span><span class='period'>.</span><span class='id identifier rubyid_execute'><span class='object_link'><a href="DBHandler.html#execute-class_method" title="DBHandler.execute (method)">execute</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO booking_connector (booking_id, ticket_id, amount) </span><span class='tstring_end'>&#39;</span></span>\
             <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>VALUES (?,?, ?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_booking'>booking</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_ticket'>ticket</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_ticket'>ticket</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>amount</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
@@ -1652,7 +1662,6 @@
       <pre class="lines">
 
 
-94
 95
 96
 97
@@ -1665,10 +1674,11 @@
 104
 105
 106
-107</pre>
+107
+108</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/booking.rb', line 94</span>
+      <pre class="code"><span class="info file"># File 'modules/booking.rb', line 95</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_confirm'>confirm</span><span class='lparen'>(</span><span class='id identifier rubyid_booking'>booking</span><span class='comma'>,</span> <span class='id identifier rubyid_user_id'>user_id</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span> <span class='comment'># rubocop:disable Metrics/MethodLength
 </span>  <span class='id identifier rubyid_booking'>booking</span><span class='period'>.</span><span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='int'>1</span>
@@ -1694,7 +1704,7 @@
 </div>
 
       <div id="footer">
-  Generated on Fri Dec  6 23:02:55 2019 by
+  Generated on Fri Dec 13 09:46:01 2019 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.20 (ruby-2.6.3).
 </div>
