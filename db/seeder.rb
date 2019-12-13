@@ -123,7 +123,8 @@ class Seeder
             CREATE TABLE "seats_connector" (
                 "seat_id"              INTEGER NOT NULL,
                 "service_id"           INTEGER NOT NULL,
-                "booking_id"           INTEGER NOT NULL
+                "booking_id"           INTEGER NOT NULL,
+                "ticket_id"            INTEGER NOT NULL
                 );
     SQL
 
