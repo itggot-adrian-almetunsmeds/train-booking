@@ -234,31 +234,58 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # Consstructs joins
   #
   # Returns joins as SQL - query (Partial String)
-  def self.join_constructor(joins, table, type = 'LEFT')
+  private def join_constructor(joins, table, type = 'LEFT')
     sql_join = ''
     if joins.is_a? String
       sql_join = " #{type} JOIN #{joins}" if joins.downcase.include?('on')
     elsif joins.is_a? Array
       joins.each_with_index do |join, index|
         if join.is_a?(Array)
-          sql_join += join_constructor(join, joins.keys[index])
-        elsif join.is_a?(String)
+          sql_join += if joins.is_a? Hash
+                        join_constructor(join, joins.keys[index])
+                      else
+                        join_constructor(join, table)
+                      end
+        elsif join.is_a? String
           sql_join += join_constructor(join, nil)
         elsif join.is_a? Hash
           if join.keys.length > 1
             join.keys.each do |key|
-              sql_join += " #{type} JOIN #{key} ON #{table}.#{key}_id = #{key}.id"
-              sql_join += join_constructor(join[key], key)
-              sql_join += " #{type} JOIN #{join[key]} ON #{key}.#{join[key]}_id = #{join[key]}.id" if join[key].is_a? Symbol
+              if key.to_s.downcase.include?('connector')
+                sql_join += " #{type} JOIN #{key} ON #{table}.id = #{key}.#{table}_id"
+                sql_join += join_constructor(join[key], key)
+                # THIS MIGHT NEED THE LAST JOIN STATEMENT FROM BELOW
+              else
+                sql_join += " #{type} JOIN #{key} ON #{table}.#{key}_id = #{key}.id"
+                sql_join += join_constructor(join[key], key)
+                if join[key].is_a? Symbol
+                  sql_join += " #{type} JOIN #{join[key]} ON #{key}.#{join[key]}_id = #{join[key]}.id"
+                end
+              end
             end
           else
-            sql_join += " #{type} JOIN #{join.keys[0]} ON #{table}.#{join.keys[0]}_id = #{join.keys[0]}.id"
+            sql_join += if join.keys[0].to_s.downcase.include?('connector')
+                          " #{type} JOIN #{join.keys[0]} ON #{table}.id = #{join.keys[0]}.#{table}_id"
+                        else
+                          " #{type} JOIN #{join.keys[0]} ON #{table}.#{join.keys[0]}_id " \
+                            "= #{join.keys[0]}.id"
+                        end
             sql_join += join_constructor(join[join.keys[0]], join.keys[0])
           end
-        else
-          sql_join += " #{type} JOIN #{join} ON #{table}.#{join}_id = #{join}.id"
+        else # A symbol perhaps?
+          sql_join += if join.to_s.downcase.include?('connector')
+                        " #{type} JOIN #{join} ON #{table}.id = #{join}.#{table}_id"
+                      else
+                        " #{type} JOIN #{join} ON #{table}.#{join}_id = #{join}.id"
+                      end
         end
       end
+    elsif joins.is_a? Symbol
+      sql_join += if joins.to_s.downcase.include?('connector')
+                    " #{type} JOIN #{joins} ON #{table}.id = #{joins}.#{table}_id"
+                  else
+                    " #{type} JOIN #{joins} ON #{table}.#{joins}_id = #{joins}.id"
+                  end
     end
     sql_join
   end
