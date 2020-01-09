@@ -24,26 +24,25 @@ class DBHandler # rubocop:disable Metrics/ClassLength
 
   # Configures what to join and on what
   # Class wide
-  
+
   # Class wide
   # Sets table
   def self.SET_TABLE(string)
     @@table = string
   end
-  
+
   # Class wide
   # Sets joins
   def self.HAS_MANY(*tables)
     @@tables = tables
   end
 
-  
   # Instance specific
   # Sets joins
   def has_many(*tables)
     @tables = tables
   end
-  
+
   # Instance specific
   # Sets table
   def self.table(table)
@@ -64,7 +63,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # FETCHING/UPDATING/INSERTING/CREATING
 
   # Fetches a entry based on the id
-  def fetch_by_id(id, table=nil)
+  def fetch_by_id(id, table = nil)
     if table.is_a?(String) || table.is_a?(Symbol)
       table = @table if table.nil?
       sql_operator table: @table, where: "#{table}.id = #{id}", join: @tables
