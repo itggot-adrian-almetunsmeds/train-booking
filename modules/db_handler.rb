@@ -24,20 +24,29 @@ class DBHandler # rubocop:disable Metrics/ClassLength
 
   # Configures what to join and on what
   # Class wide
+  
+  # Class wide
+  # Sets table
   def self.SET_TABLE(string)
     @@table = string
   end
-
+  
+  # Class wide
+  # Sets joins
   def self.HAS_MANY(*tables)
     @@tables = tables
   end
 
+  
   # Instance specific
+  # Sets joins
   def has_many(*tables)
     @tables = tables
   end
-
-  def self.tables(table)
+  
+  # Instance specific
+  # Sets table
+  def self.table(table)
     @table = table
   end
 
