@@ -137,13 +137,13 @@ class DBHandler
   # values - Array containing a list of values (optional)
   #
   # Returns sqlresult as hash
-  def self.execute(sql, *values)
+  private def execute(sql, *values)
     if values == []
-      connect.execute(sql)
-    elsif values[0].class == Array
-      connect.execute(sql, values[0][0..-1])
+      @db.execute(sql)
+    elsif values[0].is_a? Array
+      @db.execute(sql, values[0][0..-1])
     else
-      connect.execute(sql, values[0..-1])
+      @db.execute(sql, values[0..-1])
     end
   end
 
