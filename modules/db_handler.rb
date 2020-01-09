@@ -30,11 +30,13 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # If a db already excists then return it
   #
   # Returns a database objekt
-  def self.connect
-    @db = SQLite3::Database.new 'db/data.db' if @db.nil?
+  def connect(path)
+    @db ||= SQLite3::Database.new(path)
     @db.results_as_hash = true
     @db
   end
+  ######################
+  # FETCHING/UPDATING/INSERTING/CREATING
 
   # Acts as manager for construction of SQL queries
   #
