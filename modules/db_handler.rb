@@ -133,6 +133,29 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     end
   end
 
+  #########################################################
+  # PRIVATE METHODS
+
+  ######################
+  # VALIDATORS
+
+  # Validates table "query"
+  #
+  # arg - Data to validate
+  #
+  # Returns the table unless ther is an error
+  private def validate_table_input(arg)
+    raise 'A hash is not a valid input format for table' if arg.is_a? Hash
+
+    if arg.is_a? Array
+      raise 'Only one table can be selected' if arg.flatten.length > 1
+
+      arg.flatten[0].to_s
+    else
+      arg.to_s
+    end
+  end
+
   # Constructs selects
   #
   # Returns selects as SQL - Query (Partial string)
