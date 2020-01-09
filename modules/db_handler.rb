@@ -30,28 +30,33 @@ class DBHandler
       else
         args[:table] = args[:table][0]
       end
+  # Fetches all entries given a table (Alternative)
+  def all
+    fetch_all
+  end
+
+  # Fetches all entries given a table
+  def fetch_all
+    sql_operator(
+      table: @table,
+      join: @tables
+    )
+  end
+
+  def fetch_first(num = nil)
+    if num.nil?
+      sql_operator(
+        table: @table,
+        join: @tables,
+        limit: 1
+      )
+    else
+      sql_operator(
+        table: @table,
+        join: @tables,
+        limit: num
+      )
     end
-    args.each do |key, value|
-      case key
-      when :select
-        selects = select_constructor(value, args[:table])
-      when :join
-        join = join_constructor(value, args[:table])
-      when :where
-        wheres = value.split('=')
-        where = ' WHERE '
-        values = []
-        wheres.each_with_index do |value, index|
-          where += "#{value} = ?" unless index.odd?
-          values << value if index.odd?
-        end
-      end
-    end
-    selects = "SELECT * FROM #{args[:table]}" if selects == 'SELECT'
-    sqlquery = "#{selects} #{join} #{where}"
-    p sqlquery
-    p values
-    object_constructor execute(sqlquery, values[0..-1])
   end
 
   # Converts hash inside of array to instancevariables.
