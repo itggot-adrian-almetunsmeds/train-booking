@@ -12,9 +12,9 @@ class DBHandler # rubocop:disable Metrics/ClassLength
           else
             connect(db_path)
           end
-    @table = @@table if @@table
+    @table = @@table unless defined?(@@table).nil?
     @table ||= self.class
-    @tables = @@tables if @@tables
+    @tables = @@tables unless defined?(@@tables).nil?
     @tables ||= nil
   end
 
@@ -22,17 +22,23 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # PUBLIC METHODS
   # CONFIGURING / SET UP
 
+  # Configures what to join and on what
+  # Class wide
   def self.SET_TABLE(string)
     @@table = string
   end
 
-  def self.HAS_MANY(string)
-    @@tables = string
+  def self.HAS_MANY(*tables)
+    @@tables = tables
   end
 
-  # Configures what to join and on what
+  # Instance specific
   def has_many(*tables)
     @tables = tables
+  end
+
+  def self.tables(table)
+    @table = table
   end
 
   # Connects to the database
