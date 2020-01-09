@@ -107,22 +107,25 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     end
   end
 
-  # Converts hash inside of array to instancevariables.
-  #
-  # Returns an array of instance variables
-  def self.object_constructor(array)
-    array.each do |hash|
-      hash.each do |string, value|
-        string = string.to_s.gsub('.', '_')
-        instance_variable_set("@#{string}", value)
-        self.class.send(:attr_reader, string.to_sym)
-      end
+  def fetch_last(num = nil)
+    if num.nil?
+      sql_operator(
+        table: @table,
+        join: @tables,
+        limit: -1
+      )
+    else
+      sql_operator(
+        table: @table,
+        join: @tables,
+        limit: -num
+      )
     end
-    instance_variables
   end
 
   # Decides if the provided argument has to be processed before execution
-  def self.sql_operator(*args)
+  # Public for use in special sql queries
+  def sql_operator(*args)
     if args.is_a? String
       # TODO: execute
     else
