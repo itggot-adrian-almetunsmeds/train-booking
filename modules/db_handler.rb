@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'sqlite3'
+class DataHolder
+end
 
 # A class handeling a databse object
 class DBHandler # rubocop:disable Metrics/ClassLength
