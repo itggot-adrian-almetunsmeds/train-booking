@@ -2,8 +2,29 @@
 
 require 'sqlite3'
 
-# A class handeling sql
-class DBHandler
+# A class handeling a databse object
+class DBHandler # rubocop:disable Metrics/ClassLength
+  attr_accessor :table, :tables
+  # Initializes a new database handler and provices all arguments
+  def initialize(db_path = nil)
+    @db = if db_path.nil?
+            connect('db/data.db')
+          else
+            connect(db_path)
+          end
+    @table = self.class
+    @tables = nil
+  end
+
+  #########################################################
+  # PUBLIC METHODS
+  # CONFIGURING / SET UP
+
+  # Configures what to join and on what
+  def has_many(*tables)
+    @tables = tables
+  end
+
   # Connects to the database
   #
   # If a db already excists then return it
