@@ -6,15 +6,15 @@
 <title>
   Class: Train
   
-    &mdash; Documentation by YARD 0.9.20
+    &mdash; Documentation by YARD 0.9.24
   
 </title>
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "Train";
   relpath = '';
 </script>
@@ -69,12 +69,12 @@
   <dl>
     <dt>Inherits:</dt>
     <dd>
-      <span class="inheritName"><span class='object_link'><a href="DBHandler.html" title="DBHandler (class)">DBHandler</a></span></span>
+      <span class="inheritName">DBHandler</span>
       
         <ul class="fullTree">
           <li>Object</li>
           
-            <li class="next"><span class='object_link'><a href="DBHandler.html" title="DBHandler (class)">DBHandler</a></span></li>
+            <li class="next">DBHandler</li>
           
             <li class="next">Train</li>
           
@@ -327,17 +327,7 @@
   
 
 
-  
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="DBHandler.html" title="DBHandler (class)">DBHandler</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="DBHandler.html#connect-class_method" title="DBHandler.connect (method)">connect</a></span>, <span class='object_link'><a href="DBHandler.html#execute-class_method" title="DBHandler.execute (method)">execute</a></span>, <span class='object_link'><a href="DBHandler.html#join_constructor-class_method" title="DBHandler.join_constructor (method)">join_constructor</a></span>, <span class='object_link'><a href="DBHandler.html#last-class_method" title="DBHandler.last (method)">last</a></span>, <span class='object_link'><a href="DBHandler.html#object_constructor-class_method" title="DBHandler.object_constructor (method)">object_constructor</a></span>, <span class='object_link'><a href="DBHandler.html#select_constructor-class_method" title="DBHandler.select_constructor (method)">select_constructor</a></span>, <span class='object_link'><a href="DBHandler.html#sql_operator-class_method" title="DBHandler.sql_operator (method)">sql_operator</a></span>, <span class='object_link'><a href="DBHandler.html#sql_operator!-class_method" title="DBHandler.sql_operator! (method)">sql_operator!</a></span>, <span class='object_link'><a href="DBHandler.html#with_condition-class_method" title="DBHandler.with_condition (method)">with_condition</a></span>, <span class='object_link'><a href="DBHandler.html#with_id-class_method" title="DBHandler.with_id (method)">with_id</a></span>, <span class='object_link'><a href="DBHandler.html#write_to_db-class_method" title="DBHandler.write_to_db (method)">write_to_db</a></span></p>
-<div id="constructor_details" class="method_details_list">
+  <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -389,9 +379,9 @@
     <span class='ivar'>@status</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>operational</span><span class='tstring_end'>&#39;</span></span>
     <span class='ivar'>@main_location</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>G\xC3\xB6teborg C</span><span class='tstring_end'>&quot;</span></span>
     <span class='ivar'>@type_id</span> <span class='op'>=</span> <span class='int'>0</span>
-    <span class='ivar'>@id</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='const'><span class='object_link'><a href="DBHandler.html" title="DBHandler (class)">DBHandler</a></span></span><span class='period'>.</span><span class='id identifier rubyid_write_to_db'><span class='object_link'><a href="DBHandler.html#write_to_db-class_method" title="DBHandler.write_to_db (method)">write_to_db</a></span></span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>trains</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='kw'>self</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+    <span class='ivar'>@id</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='const'>DBHandler</span><span class='period'>.</span><span class='id identifier rubyid_write_to_db'>write_to_db</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>trains</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='kw'>self</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
   <span class='kw'>else</span>
-    <span class='id identifier rubyid_temp'>temp</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DBHandler.html" title="DBHandler (class)">DBHandler</a></span></span><span class='period'>.</span><span class='id identifier rubyid_with_id'><span class='object_link'><a href="DBHandler.html#with_id-class_method" title="DBHandler.with_id (method)">with_id</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>trains</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_temp'>temp</span> <span class='op'>=</span> <span class='const'>DBHandler</span><span class='period'>.</span><span class='id identifier rubyid_with_id'>with_id</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>trains</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
     <span class='ivar'>@status</span> <span class='op'>=</span> <span class='id identifier rubyid_temp'>temp</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>status</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
     <span class='ivar'>@main_location</span> <span class='op'>=</span> <span class='id identifier rubyid_temp'>temp</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>main_location</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
     <span class='ivar'>@type_id</span> <span class='op'>=</span> <span class='id identifier rubyid_temp'>temp</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>type_id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
@@ -422,7 +412,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute id</p>
+<p>Returns the value of attribute id.</p>
 
 
   </div>
@@ -465,7 +455,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute main_location</p>
+<p>Returns the value of attribute main_location.</p>
 
 
   </div>
@@ -508,7 +498,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute status</p>
+<p>Returns the value of attribute status.</p>
 
 
   </div>
@@ -551,7 +541,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute type_id</p>
+<p>Returns the value of attribute type_id.</p>
 
 
   </div>
@@ -671,9 +661,9 @@
 </div>
 
       <div id="footer">
-  Generated on Fri Dec 13 13:50:19 2019 by
+  Generated on Thu Jan  9 07:29:15 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.20 (ruby-2.6.3).
+  0.9.24 (ruby-2.6.3).
 </div>
 
     </div>

@@ -6,15 +6,15 @@
 <title>
   Class: Seeder
   
-    &mdash; Documentation by YARD 0.9.20
+    &mdash; Documentation by YARD 0.9.24
   
 </title>
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "Seeder";
   relpath = '';
 </script>
@@ -280,12 +280,12 @@
       <pre class="lines">
 
 
-20
 21
-22</pre>
+22
+23</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 20</span>
+      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 21</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_connect'>connect</span>
   <span class='const'>SQLite3</span><span class='op'>::</span><span class='const'>Database</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>db/data.db</span><span class='tstring_end'>&#39;</span></span>
@@ -323,7 +323,6 @@
       <pre class="lines">
 
 
-45
 46
 47
 48
@@ -435,14 +434,15 @@
 154
 155
 156
-157</pre>
+157
+158</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 45</span>
+      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_create_tables'>create_tables</span><span class='lparen'>(</span><span class='id identifier rubyid_db'>db</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
-<span class='tstring_content'>          CREATE TABLE &quot;tickets&quot; (
+<span class='tstring_content'>          CREATE TABLE &quot;ticket&quot; (
               &quot;id&quot;    INTEGER PRIMARY KEY AUTOINCREMENT,
               &quot;name&quot;  TEXT NOT NULL,
               &quot;price&quot; INTEGER NOT NULL,
@@ -451,7 +451,7 @@
 </span><span class='heredoc_end'>  SQL
 </span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
-<span class='tstring_content'>          CREATE TABLE &quot;train_types&quot; (
+<span class='tstring_content'>          CREATE TABLE &quot;train_type&quot; (
               &quot;id&quot;	         INTEGER PRIMARY KEY AUTOINCREMENT,
               &quot;name&quot;	         TEXT NOT NULL,
               &quot;kiosk&quot;          INTEGER NOT NULL,
@@ -460,7 +460,7 @@
 </span><span class='heredoc_end'>  SQL
 </span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
-<span class='tstring_content'>          CREATE TABLE &quot;trains&quot; (
+<span class='tstring_content'>          CREATE TABLE &quot;train&quot; (
               &quot;id&quot;      INTEGER PRIMARY KEY AUTOINCREMENT,
               &quot;type_id&quot; INTEGER NOT NULL,
               &quot;status&quot;  TEXT NOT NULL DEFAULT &quot;operational&quot;,
@@ -469,7 +469,7 @@
 </span><span class='heredoc_end'>  SQL
 </span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
-<span class='tstring_content'>          CREATE TABLE &quot;seats&quot; (
+<span class='tstring_content'>          CREATE TABLE &quot;seat&quot; (
               &quot;id&quot;                INTEGER PRIMARY KEY AUTOINCREMENT,
               &quot;service_id&quot;        INTEGER NOT NULL,
               &quot;occupied&quot;          INTEGER NOT NULL DEFAULT 0,
@@ -478,7 +478,7 @@
 </span><span class='heredoc_end'>  SQL
 </span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
-<span class='tstring_content'>          CREATE TABLE &quot;services&quot; (
+<span class='tstring_content'>          CREATE TABLE &quot;service&quot; (
               &quot;id&quot;    INTEGER PRIMARY KEY AUTOINCREMENT,
               &quot;train_id&quot;              INTEGER NOT NULL,
               &quot;name&quot;                  TEXT NOT NULL,
@@ -491,14 +491,14 @@
 </span><span class='heredoc_end'>  SQL
 </span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
-<span class='tstring_content'>          CREATE TABLE &quot;destinations&quot; (
+<span class='tstring_content'>          CREATE TABLE &quot;destination&quot; (
               &quot;id&quot;            INTEGER PRIMARY KEY AUTOINCREMENT,
               &quot;name&quot;          TEXT NOT NULL
               );
 </span><span class='heredoc_end'>  SQL
 </span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
-<span class='tstring_content'>          CREATE TABLE &quot;bookings&quot; (
+<span class='tstring_content'>          CREATE TABLE &quot;booking&quot; (
               &quot;id&quot;                INTEGER PRIMARY KEY AUTOINCREMENT,
               &quot;user_id&quot;           INTEGER,
               &quot;price&quot;             INTEGER NOT NULL,
@@ -518,7 +518,7 @@
 </span><span class='heredoc_end'>  SQL
 </span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
-<span class='tstring_content'>          CREATE TABLE &quot;seats_connector&quot; (
+<span class='tstring_content'>          CREATE TABLE &quot;seat_connector&quot; (
               &quot;seat_id&quot;              INTEGER NOT NULL,
               &quot;service_id&quot;           INTEGER NOT NULL,
               &quot;booking_id&quot;           INTEGER NOT NULL,
@@ -527,7 +527,7 @@
 </span><span class='heredoc_end'>  SQL
 </span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
-<span class='tstring_content'>          CREATE TABLE &quot;users&quot; (
+<span class='tstring_content'>          CREATE TABLE &quot;user&quot; (
               &quot;id&quot;                INTEGER PRIMARY KEY AUTOINCREMENT,
               &quot;first_name&quot;        TEXT NOT NULL,
               &quot;last_name&quot;         TEXT NOT NULL,
@@ -539,7 +539,7 @@
 </span><span class='heredoc_end'>  SQL
 </span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
-<span class='tstring_content'>          CREATE TABLE &quot;platforms&quot; (
+<span class='tstring_content'>          CREATE TABLE &quot;platform&quot; (
               &quot;id&quot;                INTEGER PRIMARY KEY AUTOINCREMENT,
               &quot;name&quot;              TEXT NOT NULL,
               &quot;destination_id&quot;    INTEGER NOT NULL
@@ -547,7 +547,7 @@
 </span><span class='heredoc_end'>  SQL
 </span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='heredoc_beg'>&lt;&lt;-SQL</span>
-<span class='tstring_content'>          CREATE TABLE &quot;connector&quot; (
+<span class='tstring_content'>          CREATE TABLE &quot;ticket_connector&quot; (
               &quot;ticket_id&quot;               INTEGER NOT NULL,
               &quot;service_id&quot;              INTEGER NOT NULL
               );
@@ -586,7 +586,6 @@
       <pre class="lines">
 
 
-27
 28
 29
 30
@@ -599,23 +598,24 @@
 37
 38
 39
-40</pre>
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 27</span>
+      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 28</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_drop_tables'>drop_tables</span><span class='lparen'>(</span><span class='id identifier rubyid_db'>db</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS tickets;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS train_types;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS trains;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS seats;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS seats_connector;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS services;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS destinations;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS bookings;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS users;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS platforms;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS connector;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS ticket;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS train_type;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS train;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS seat;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS service;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS destination;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS booking;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS user;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS platform;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS seat_connector;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS ticket_connector;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DROP TABLE IF EXISTS booking_connector;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -651,7 +651,6 @@
       <pre class="lines">
 
 
-162
 163
 164
 165
@@ -868,10 +867,23 @@
 376
 377
 378
-379</pre>
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 162</span>
+      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 163</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_populate_tables'>populate_tables</span><span class='lparen'>(</span><span class='id identifier rubyid_db'>db</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_connector'>connector</span> <span class='op'>=</span> <span class='lbracket'>[</span>
@@ -1058,37 +1070,49 @@
     <span class='lbrace'>{</span><span class='label'>type_id:</span> <span class='int'>4</span><span class='rbrace'>}</span><span class='comma'>,</span>
     <span class='lbrace'>{</span><span class='label'>type_id:</span> <span class='int'>2</span><span class='rbrace'>}</span>
   <span class='rbracket'>]</span>
+  
+  <span class='id identifier rubyid_users'>users</span> <span class='op'>=</span> <span class='lbracket'>[</span>
+    <span class='lbrace'>{</span><span class='label'>first_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Jakob</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>last_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Petterson</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>password:</span> <span class='const'>BCrypt</span><span class='op'>::</span><span class='const'>Password</span><span class='period'>.</span><span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>tetris</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>email:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>jakob@ntig.se</span><span class='tstring_end'>&#39;</span></span><span class='rbrace'>}</span><span class='comma'>,</span>
+    <span class='lbrace'>{</span><span class='label'>first_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Adrian</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>last_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Anderson</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>password:</span> <span class='const'>BCrypt</span><span class='op'>::</span><span class='const'>Password</span><span class='period'>.</span><span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>tetris</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>email:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>adrian@ntig.se</span><span class='tstring_end'>&#39;</span></span><span class='rbrace'>}</span><span class='comma'>,</span>
+    <span class='lbrace'>{</span><span class='label'>first_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Carl</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>last_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Rytger</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>password:</span> <span class='const'>BCrypt</span><span class='op'>::</span><span class='const'>Password</span><span class='period'>.</span><span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>tetris</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>email:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>carl@ntig.se</span><span class='tstring_end'>&#39;</span></span><span class='rbrace'>}</span><span class='comma'>,</span>
+    <span class='lbrace'>{</span><span class='label'>first_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>David</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>last_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Fredriksson</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>password:</span> <span class='const'>BCrypt</span><span class='op'>::</span><span class='const'>Password</span><span class='period'>.</span><span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>tetris</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>email:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>david@ntig.se</span><span class='tstring_end'>&#39;</span></span><span class='rbrace'>}</span><span class='comma'>,</span>
+    <span class='lbrace'>{</span><span class='label'>first_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Admin</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>last_name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Administrator</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>password:</span> <span class='const'>BCrypt</span><span class='op'>::</span><span class='const'>Password</span><span class='period'>.</span><span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>admin</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>email:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>admin@admin</span><span class='tstring_end'>&#39;</span></span><span class='rbrace'>}</span>
+  <span class='rbracket'>]</span>
+
+  <span class='id identifier rubyid_users'>users</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_d'>d</span><span class='op'>|</span>
+    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO user (first_name, last_name, password, email) VALUES (?,?,?,?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:first_name</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:last_name</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:password</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:email</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
 
   <span class='id identifier rubyid_seats'>seats</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_d'>d</span><span class='op'>|</span>
-    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO seats (service_id) VALUES (?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:service_id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO seat (service_id) VALUES (?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:service_id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
   <span class='id identifier rubyid_trains'>trains</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_d'>d</span><span class='op'>|</span>
-    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO trains (type_id) VALUES (?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:type_id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO train (type_id) VALUES (?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:type_id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
   <span class='id identifier rubyid_connector'>connector</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_d'>d</span><span class='op'>|</span>
-    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO connector (service_id, ticket_id) VALUES (?,?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:service_id</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:ticket_id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO ticket_connector (service_id, ticket_id) VALUES (?,?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:service_id</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:ticket_id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
   <span class='id identifier rubyid_services'>services</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_d'>d</span><span class='op'>|</span>
-    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO services (train_id, name, departure_id, departure_time, arrival_id, arrival_time, empty_seats) VALUES (?,?,?,?,?,?,?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:train_id</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:departure_id</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:departure_time</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:arrival_id</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:arrival_time</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:empty_seats</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO service (train_id, name, departure_id, departure_time, arrival_id, arrival_time, empty_seats) VALUES (?,?,?,?,?,?,?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:train_id</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:departure_id</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:departure_time</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:arrival_id</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:arrival_time</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:empty_seats</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
   <span class='id identifier rubyid_tickets'>tickets</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_d'>d</span><span class='op'>|</span>
-    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO tickets (name, price, points) VALUES(?,?,?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:price</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:points</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO ticket (name, price, points) VALUES(?,?,?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:price</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:points</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
   <span class='id identifier rubyid_train_types'>train_types</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_d'>d</span><span class='op'>|</span>
-    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO train_types (name, kiosk, capacity) VALUES(?,?,?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:kiosk</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:seats</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO train_type (name, kiosk, capacity) VALUES(?,?,?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:kiosk</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:seats</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
   <span class='id identifier rubyid_destinations'>destinations</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_d'>d</span><span class='op'>|</span>
-    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO destinations (name) VALUES(?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO destination (name) VALUES(?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
   <span class='id identifier rubyid_platforms'>platforms</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_d'>d</span><span class='op'>|</span>
-    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO platforms (name, destination_id) VALUES(?, ?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:destination_id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_db'>db</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INSERT INTO platform (name, destination_id) VALUES(?, ?)</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_d'>d</span><span class='lbracket'>[</span><span class='symbol'>:destination_id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1122,7 +1146,6 @@
       <pre class="lines">
 
 
-9
 10
 11
 12
@@ -1130,10 +1153,11 @@
 14
 15
 16
-17</pre>
+17
+18</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 9</span>
+      <pre class="code"><span class="info file"># File 'db/seeder.rb', line 10</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_seed!'>seed!</span>
   <span class='id identifier rubyid_db'>db</span> <span class='op'>=</span> <span class='id identifier rubyid_connect'>connect</span>
@@ -1154,9 +1178,9 @@
 </div>
 
       <div id="footer">
-  Generated on Fri Dec 13 13:50:19 2019 by
+  Generated on Thu Jan  9 07:29:15 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.20 (ruby-2.6.3).
+  0.9.24 (ruby-2.6.3).
 </div>
 
     </div>
