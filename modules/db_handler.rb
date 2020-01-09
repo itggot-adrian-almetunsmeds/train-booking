@@ -307,6 +307,54 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     end
   end
 
+  ######################
+  # GENERAL PRIVATE METHODS
+
+  # Acts as manager for construction of SQL queries
+  #
+  # Returns a list of lists containing objects representing databases entries
+  private def sql_operator!(args)
+    args = args.first
+    raise 'No table provided' unless args.keys.include? :table
+
+    join = ''
+    where = ''
+    order = ''
+    limit = ''
+    selects = 'SELECT'
+    values = []
+    args[:table] = validate_table_input args[:table]
+    args.each do |key, value|
+      case key
+      when :select
+        selects = select_constructor(value, args[:table])
+      when :join
+        join = join_constructor(value, args[:table])
+      when :where
+        temp = where_constructor(value)
+        where = temp[0]
+        values << temp[1]
+      when :limit
+        limit = if value.to_i.negative?
+                  order = 'ORDER BY id DESC' if args[:order].nil?
+                  " LIMIT #{value * -1}"
+                else
+                  " LIMIT #{value}"
+                end
+      when :order
+        order = order_constructor(value)
+      end
+    end
+    selects = "SELECT * FROM #{args[:table]}" if selects == 'SELECT'
+    sqlquery = "#{selects} #{join} #{where} #{order} #{limit}"
+    p sqlquery
+    p values
+    object_constructor execute(sqlquery, values[0..-1]), self
+    # if ^^.length == 1
+
+    # end
+  end
+
   # Executes given sql code like SQLite3 gem
   #
   # sql - String (SQL code)
