@@ -173,6 +173,64 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     selects
   end
 
+  # Constructs wheres
+  #
+  # Reutrns a Array containing wheres as SQL - Query (Partial String), and associated values
+  private def where_constructor(value)
+    where = ' WHERE '
+    values = []
+    if value.is_a? String
+      wheres = value.split('=')
+      wheres.each_with_index do |temp, index|
+        where += "#{temp} = ?" unless index.odd?
+        values << temp if index.odd?
+      end
+    elsif value.is_a? Hash
+      keys = value.keys
+      keys.each_with_index do |key, index|
+        if value[key].is_a?(String) || value[key].is_a?(Integer) ||
+           value[key].is_a?(Symbol) || !!value[key] == value[key] # Boolean?
+          temp = value[key]
+          temp = temp.to_s if temp.is_a? Symbol
+          where += if index.zero?
+                     " #{key} = ?"
+                   else
+                     " AND #{key} = ?"
+                   end
+          values << temp
+        elsif value[key].is_a? Array
+          temp = value[key]
+          where += " #{key} IN ("
+          temp.each_with_index do |sav, i|
+            where += if i.zero?
+                       '?'
+                     else
+                       ',?'
+                     end
+            values << sav
+          end
+          where += ')'
+        end
+      end
+    elsif value.is_a? Array
+      value.each_with_index do |value, i|
+        wheres = value.split('=')
+        wheres.each_with_index do |temp, index|
+          if index.odd?
+            values << temp
+          else
+            where += if i.zero?
+                       "#{temp} = ?"
+                     else
+                       " AND #{temp} = ?"
+                     end
+          end
+        end
+      end
+    end
+    [where, values]
+  end
+
   # Consstructs joins
   #
   # Returns joins as SQL - query (Partial String)
