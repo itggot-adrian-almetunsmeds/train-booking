@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'sqlite3'
+require 'bcrypt'
 
 # Handles seeding/generation of db
 class Seeder
@@ -25,17 +26,17 @@ class Seeder
   # 
   # db - (database Object)
   def self.drop_tables(db)
-    db.execute('DROP TABLE IF EXISTS tickets;')
-    db.execute('DROP TABLE IF EXISTS train_types;')
-    db.execute('DROP TABLE IF EXISTS trains;')
-    db.execute('DROP TABLE IF EXISTS seats;')
-    db.execute('DROP TABLE IF EXISTS seats_connector;')
-    db.execute('DROP TABLE IF EXISTS services;')
-    db.execute('DROP TABLE IF EXISTS destinations;')
-    db.execute('DROP TABLE IF EXISTS bookings;')
-    db.execute('DROP TABLE IF EXISTS users;')
-    db.execute('DROP TABLE IF EXISTS platforms;')
-    db.execute('DROP TABLE IF EXISTS connector;')
+    db.execute('DROP TABLE IF EXISTS ticket;')
+    db.execute('DROP TABLE IF EXISTS train_type;')
+    db.execute('DROP TABLE IF EXISTS train;')
+    db.execute('DROP TABLE IF EXISTS seat;')
+    db.execute('DROP TABLE IF EXISTS service;')
+    db.execute('DROP TABLE IF EXISTS destination;')
+    db.execute('DROP TABLE IF EXISTS booking;')
+    db.execute('DROP TABLE IF EXISTS user;')
+    db.execute('DROP TABLE IF EXISTS platform;')
+    db.execute('DROP TABLE IF EXISTS seat_connector;')
+    db.execute('DROP TABLE IF EXISTS ticket_connector;')
     db.execute('DROP TABLE IF EXISTS booking_connector;')
   end
 
@@ -44,7 +45,7 @@ class Seeder
   # db - (database Object)
   def self.create_tables(db)
     db.execute <<-SQL
-            CREATE TABLE "tickets" (
+            CREATE TABLE "ticket" (
                 "id"    INTEGER PRIMARY KEY AUTOINCREMENT,
                 "name"  TEXT NOT NULL,
                 "price" INTEGER NOT NULL,
@@ -53,7 +54,7 @@ class Seeder
     SQL
 
     db.execute <<-SQL
-            CREATE TABLE "train_types" (
+            CREATE TABLE "train_type" (
                 "id"	         INTEGER PRIMARY KEY AUTOINCREMENT,
                 "name"	         TEXT NOT NULL,
                 "kiosk"          INTEGER NOT NULL,
@@ -62,7 +63,7 @@ class Seeder
     SQL
 
     db.execute <<-SQL
-            CREATE TABLE "trains" (
+            CREATE TABLE "train" (
                 "id"      INTEGER PRIMARY KEY AUTOINCREMENT,
                 "type_id" INTEGER NOT NULL,
                 "status"  TEXT NOT NULL DEFAULT "operational",
@@ -71,7 +72,7 @@ class Seeder
     SQL
 
     db.execute <<-SQL
-            CREATE TABLE "seats" (
+            CREATE TABLE "seat" (
                 "id"                INTEGER PRIMARY KEY AUTOINCREMENT,
                 "service_id"        INTEGER NOT NULL,
                 "occupied"          INTEGER NOT NULL DEFAULT 0,
@@ -80,7 +81,7 @@ class Seeder
     SQL
 
     db.execute <<-SQL
-            CREATE TABLE "services" (
+            CREATE TABLE "service" (
                 "id"    INTEGER PRIMARY KEY AUTOINCREMENT,
                 "train_id"              INTEGER NOT NULL,
                 "name"                  TEXT NOT NULL,
@@ -93,14 +94,14 @@ class Seeder
     SQL
 
     db.execute <<-SQL
-            CREATE TABLE "destinations" (
+            CREATE TABLE "destination" (
                 "id"            INTEGER PRIMARY KEY AUTOINCREMENT,
                 "name"          TEXT NOT NULL
                 );
     SQL
 
     db.execute <<-SQL
-            CREATE TABLE "bookings" (
+            CREATE TABLE "booking" (
                 "id"                INTEGER PRIMARY KEY AUTOINCREMENT,
                 "user_id"           INTEGER,
                 "price"             INTEGER NOT NULL,
@@ -120,7 +121,7 @@ class Seeder
     SQL
 
     db.execute <<-SQL
-            CREATE TABLE "seats_connector" (
+            CREATE TABLE "seat_connector" (
                 "seat_id"              INTEGER NOT NULL,
                 "service_id"           INTEGER NOT NULL,
                 "booking_id"           INTEGER NOT NULL,
@@ -129,7 +130,7 @@ class Seeder
     SQL
 
     db.execute <<-SQL
-            CREATE TABLE "users" (
+            CREATE TABLE "user" (
                 "id"                INTEGER PRIMARY KEY AUTOINCREMENT,
                 "first_name"        TEXT NOT NULL,
                 "last_name"         TEXT NOT NULL,
@@ -141,7 +142,7 @@ class Seeder
     SQL
 
     db.execute <<-SQL
-            CREATE TABLE "platforms" (
+            CREATE TABLE "platform" (
                 "id"                INTEGER PRIMARY KEY AUTOINCREMENT,
                 "name"              TEXT NOT NULL,
                 "destination_id"    INTEGER NOT NULL
@@ -149,7 +150,7 @@ class Seeder
     SQL
 
     db.execute <<-SQL
-            CREATE TABLE "connector" (
+            CREATE TABLE "ticket_connector" (
                 "ticket_id"               INTEGER NOT NULL,
                 "service_id"              INTEGER NOT NULL
                 );
@@ -344,39 +345,50 @@ class Seeder
       {type_id: 4},
       {type_id: 2}
     ]
+    
+    users = [
+      {first_name: 'Jakob', last_name: 'Petterson', password: BCrypt::Password.create('tetris'), email: 'jakob@ntig.se'},
+      {first_name: 'Adrian', last_name: 'Anderson', password: BCrypt::Password.create('tetris'), email: 'adrian@ntig.se'},
+      {first_name: 'Carl', last_name: 'Rytger', password: BCrypt::Password.create('tetris'), email: 'carl@ntig.se'},
+      {first_name: 'David', last_name: 'Fredriksson', password: BCrypt::Password.create('tetris'), email: 'david@ntig.se'},
+      {first_name: 'Admin', last_name: 'Administrator', password: BCrypt::Password.create('admin'), email: 'admin@admin'}
+    ]
+
+    users.each do |d|
+      db.execute('INSERT INTO user (first_name, last_name, password, email) VALUES (?,?,?,?)', d[:first_name], d[:last_name], d[:password], d[:email])
+    end
 
     seats.each do |d|
-      db.execute('INSERT INTO seats (service_id) VALUES (?)', d[:service_id])
+      db.execute('INSERT INTO seat (service_id) VALUES (?)', d[:service_id])
     end
 
     trains.each do |d|
-      db.execute('INSERT INTO trains (type_id) VALUES (?)', d[:type_id])
+      db.execute('INSERT INTO train (type_id) VALUES (?)', d[:type_id])
     end
 
     connector.each do |d|
-      db.execute('INSERT INTO connector (service_id, ticket_id) VALUES (?,?)', d[:service_id], d[:ticket_id])
+      db.execute('INSERT INTO ticket_connector (service_id, ticket_id) VALUES (?,?)', d[:service_id], d[:ticket_id])
     end
 
     services.each do |d|
-      db.execute('INSERT INTO services (train_id, name, departure_id, departure_time, arrival_id, arrival_time, empty_seats) VALUES (?,?,?,?,?,?,?)', d[:train_id], d[:name], d[:departure_id], d[:departure_time], d[:arrival_id], d[:arrival_time], d[:empty_seats])
+      db.execute('INSERT INTO service (train_id, name, departure_id, departure_time, arrival_id, arrival_time, empty_seats) VALUES (?,?,?,?,?,?,?)', d[:train_id], d[:name], d[:departure_id], d[:departure_time], d[:arrival_id], d[:arrival_time], d[:empty_seats])
     end
 
     tickets.each do |d|
-      db.execute('INSERT INTO tickets (name, price, points) VALUES(?,?,?)', d[:name], d[:price], d[:points])
+      db.execute('INSERT INTO ticket (name, price, points) VALUES(?,?,?)', d[:name], d[:price], d[:points])
     end
 
     train_types.each do |d|
-      db.execute('INSERT INTO train_types (name, kiosk, capacity) VALUES(?,?,?)', d[:name], d[:kiosk], d[:seats])
+      db.execute('INSERT INTO train_type (name, kiosk, capacity) VALUES(?,?,?)', d[:name], d[:kiosk], d[:seats])
     end
 
     destinations.each do |d|
-      db.execute('INSERT INTO destinations (name) VALUES(?)', d[:name])
+      db.execute('INSERT INTO destination (name) VALUES(?)', d[:name])
     end
 
     platforms.each do |d|
-      db.execute('INSERT INTO platforms (name, destination_id) VALUES(?, ?)', d[:name], d[:destination_id])
+      db.execute('INSERT INTO platform (name, destination_id) VALUES(?, ?)', d[:name], d[:destination_id])
     end
   end
 end
 
-Seeder.seed!
