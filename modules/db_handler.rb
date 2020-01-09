@@ -159,13 +159,13 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # Constructs selects
   #
   # Returns selects as SQL - Query (Partial string)
-  def self.select_constructor(value, table)
+  private def select_constructor(value, table)
     selects = 'SELECT'
-    if value.is_a? String
+    if value.is_a?(Symbol) || value.is_a?(String)
       selects = "SELECT #{value} FROM #{table}"
     else
       value.each do |item|
-        item = item.gsub(/\s+/, '_')
+        item = item.to_s.gsub(/\s+/, '_')
         selects += " #{item} AS '#{item}',"
       end
       selects = selects[0..-2] + " FROM #{table}"
