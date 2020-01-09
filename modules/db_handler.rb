@@ -123,6 +123,25 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     end
   end
 
+  def find_by(params)
+    if params.is_a? Hash
+      holder = []
+      params.each do |key, value|
+        holder << "#{key} = #{value}"
+      end
+      sql_operator(
+        table: @table,
+        join: @tables,
+        where: holder
+      )
+    else
+      sql_operator(
+        table: @table,
+        join: @tables,
+        where: params
+      )
+    end
+  end
   # Decides if the provided argument has to be processed before execution
   # Public for use in special sql queries
   def sql_operator(*args)
