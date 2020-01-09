@@ -171,6 +171,37 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     end
   end
 
+  ######################
+  # CONSTRUCTORS
+
+  # Converts hash inside of array to a DataHolder Object.
+  #
+  # Returns an array of objects
+  private def object_constructor(array, class_holder)
+    holder = []
+    # TODO: Make a "posts" method that is an object containing all
+    #  the posts. Making this callable etc: User.posts.first
+    if array.length == 1
+      array.first.each do |string, value|
+        string = string.to_s.gsub('.', '_')
+        class_holder.instance_variable_set("@#{string}", value)
+        class_holder.class.send(:attr_reader, string.to_sym)
+      end
+    else
+      array.each do |hash|
+        p hash
+        object = DataHolder.new
+        hash.each do |string, value|
+          string = string.to_s.gsub('.', '_')
+          object.instance_variable_set("@#{string}", value)
+          object.class.send(:attr_reader, string.to_sym)
+        end
+        holder << object
+      end
+      holder
+    end
+  end
+
   # Constructs selects
   #
   # Returns selects as SQL - Query (Partial string)
