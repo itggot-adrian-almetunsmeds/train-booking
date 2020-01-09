@@ -290,6 +290,23 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     sql_join
   end
 
+  # Constructs order
+  #
+  # Returns order as SQL - Query (Partial String)
+  private def order_constructor(value)
+    raise 'Option Limit is not a hash.' unless value.is_a? Hash
+
+    if value.keys.include?(:table) && value.keys.include?(:order)
+      "ORDER BY #{value[:table]} #{value[:order]}"
+    elsif !value[:table].nil?
+      "ORDER BY #{value[:table]}"
+    elsif !value[:order].nil?
+      "ORDER BY id #{value[:order]}"
+    else
+      raise 'Invalid limit parsing. Missing order or table paramateter.'
+    end
+  end
+
   # Executes given sql code like SQLite3 gem
   #
   # sql - String (SQL code)
