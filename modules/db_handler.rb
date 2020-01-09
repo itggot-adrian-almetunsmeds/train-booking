@@ -63,21 +63,15 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   ######################
   # FETCHING/UPDATING/INSERTING/CREATING
 
-  # Acts as manager for construction of SQL queries
-  #
-  # Returns nothing - But it sends the data to the object constructor
-  def self.sql_operator!(args)
-    args = args.first
-    join = ''
-    where = ''
-    selects = 'SELECT'
-    values = []
-    if args[:table].is_a? Array
-      if args[:table].length > 1
-        raise 'Only one table can be selected'
-      else
-        args[:table] = args[:table][0]
-      end
+  # Fetches a entry based on the id
+  def fetch_by_id(id, table)
+    if table.is_a?(String) || table.is_a?(Symbol)
+      sql_operator table: @table, where: "#{table}.id = #{id}", join: @tables
+    else
+      raise 'Provided table is invalid'
+    end
+  end
+
   # Fetches all entries given a table (Alternative)
   def all
     fetch_all
