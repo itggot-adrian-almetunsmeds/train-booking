@@ -203,7 +203,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
             # Using DataHolder class to store the additional data
             # There was no class with the given name.
           end
-          string = string.split('.')[1]
+          string = string.split('.')[1] if string.split('.').length > 1
 
           object_holder.each do |temp|
             # Checks if there is a class in the object holder that matches the gathered data
