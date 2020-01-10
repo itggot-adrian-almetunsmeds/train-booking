@@ -407,22 +407,57 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     # end
   end
 
+  # Insert method
+  #
+  # Reutrns nothing
   private def insert!(data, table)
-    raise 'Data input needs to be a hash.' unless data.is_a? Hash
+    if data.is_a? Object
+      write_to_db(data, table)
+    else
+      raise 'Data input needs to be a hash.' unless data.is_a? Hash
 
-    query = "INSERT INTO #{table} ( "
-    values = 'VALUES ('
-    stored = []
-    data.each do |key, value|
-      query += "#{key},"
-      values += '?,'
-      stored << value
+      query = "INSERT INTO #{table} ( "
+      values = 'VALUES ('
+      stored = []
+      data.each do |key, value|
+        query += "#{key},"
+        values += '?,'
+        stored << value
+      end
+      query[-1] = ') '
+      values[-1] = ') '
+      execute(query + values, stored)
     end
-    query[-1] = ') '
-    values[-1] = ') '
-    execute(query + values, stored)
   end
 
+  # Writes an object into a given table
+  #
+  # table - String (Name of table)
+  # object - Object to be written to table
+  #
+  # Returns nothing
+  private def write_to_db(object, table)
+    z = object.instance_variables
+    q = []
+    k = []
+    # Returns values and their table
+    z.each_with_index do |_, i|
+      q << object.instance_variable_get(z[i])
+      k << z[i].to_s.gsub('@', '')
+    end
+    k = k.to_s.gsub('[', '')
+    k = k.to_s.gsub(']', '')
+
+    # Handles generation of SQLInjection protection
+    x = '?'
+    if z.length > 1
+      (z.length - 1).times do
+        x += ',?'
+      end
+    end
+
+    execute("INSERT INTO #{table} (#{k}) VALUES (#{x})", q)
+  end
   # Executes given sql code like SQLite3 gem
   #
   # sql - String (SQL code)
