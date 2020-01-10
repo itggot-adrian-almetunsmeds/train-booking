@@ -180,9 +180,13 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   ######################
   # CONSTRUCTORS
 
-  # Converts hash inside of array to a DataHolder Object.
+  # Objectifies entered data. Either initializing a new object instance with the 
+  # given data or updates a excisting instance
+  # 
+  # array - Array or Array containing a Hash containing data
+  # class_holder - "Origin" instance
   #
-  # Returns an array of objects
+  # Returns nothing
   private def object_constructor(array, class_holder)
     if array.length == 1
       array.first.each do |string, value|
@@ -200,8 +204,8 @@ class DBHandler # rubocop:disable Metrics/ClassLength
             clazz = Object.const_get(string.split('.')[0].capitalize)
           rescue StandardError
             clazz = Object.const_get('DataHolder')
-            # Using DataHolder class to store the additional data
             # There was no class with the given name.
+            # Using DataHolder class to store the additional data
           end
           string = string.split('.')[1] if string.split('.').length > 1
 
