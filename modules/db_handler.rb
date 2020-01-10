@@ -138,6 +138,12 @@ class DBHandler # rubocop:disable Metrics/ClassLength
       )
     end
   end
+
+  def insert(data, table = nil)
+    table = @table if table.nil?
+    insert!(data, table)
+  end
+
   # Decides if the provided argument has to be processed before execution
   # Public for use in special sql queries
   def sql_operator(*args)
@@ -399,6 +405,22 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     # if ^^.length == 1
 
     # end
+  end
+
+  private def insert!(data, table)
+    raise 'Data input needs to be a hash.' unless data.is_a? Hash
+
+    query = "INSERT INTO #{table} ( "
+    values = 'VALUES ('
+    stored = []
+    data.each do |key, value|
+      query += "#{key},"
+      values += '?,'
+      stored << value
+    end
+    query[-1] = ') '
+    values[-1] = ') '
+    execute(query + values, stored)
   end
 
   # Executes given sql code like SQLite3 gem
