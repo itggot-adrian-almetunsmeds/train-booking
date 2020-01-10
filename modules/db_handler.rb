@@ -184,9 +184,6 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   #
   # Returns an array of objects
   private def object_constructor(array, class_holder)
-    holder = []
-    # TODO: Make a "posts" method that is an object containing all
-    #  the posts. Making this callable etc: User.posts.first
     if array.length == 1
       array.first.each do |string, value|
         string = string.to_s.gsub('.', '_')
@@ -194,17 +191,48 @@ class DBHandler # rubocop:disable Metrics/ClassLength
         class_holder.class.send(:attr_reader, string.to_sym)
       end
     else
+      p array
       array.each do |hash|
-        p hash
-        object = DataHolder.new
+        object_holder = []
         hash.each do |string, value|
-          string = string.to_s.gsub('.', '_')
-          object.instance_variable_set("@#{string}", value)
-          object.class.send(:attr_reader, string.to_sym)
+          set = false
+          begin
+            clazz = Object.const_get(string.split('.')[0].capitalize)
+          rescue StandardError
+            clazz = Object.const_get('DataHolder')
+            # Using DataHolder class to store the additional data
+            # There was no class with the given name.
+          end
+          string = string.split('.')[1]
+
+          object_holder.each do |temp|
+            # Checks if there is a class in the object holder that matches the gathered data
+            next unless temp.class == clazz
+
+            temp.instance_variable_set("@#{string}", value)
+            temp.class.send(:attr_reader, string.to_sym)
+            set = true
+          end
+
+          # If there was no object with set class create a new instance of it
+          next if set
+
+          temp = clazz.new
+          temp.instance_variable_set("@#{string.downcase}", value)
+          temp.class.send(:attr_reader, string.to_sym)
+          object_holder << temp
         end
-        holder << object
+
+        object_holder.each do |temporary_holder|
+          # Gets the current values if there are some
+          temp = class_holder.instance_variable_get("@#{temporary_holder.class.to_s.downcase}")
+          # If there was a value add the newly created ones
+          class_holder.instance_variable_set("@#{temporary_holder.class.to_s.downcase}", [temp, temporary_holder].flatten) unless temp.nil?
+          # Else set the newly created ones
+          class_holder.instance_variable_set("@#{temporary_holder.class.to_s.downcase}", temporary_holder) if temp.nil?
+          class_holder.class.send(:attr_reader, temporary_holder.class.to_s.downcase.to_sym)
+        end
       end
-      holder
     end
   end
 
