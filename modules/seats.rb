@@ -9,7 +9,16 @@ class Objects
   end
 end
 
+class SeatConnector < DBHandler
+  set_table :seat_connector
+  set_columns :seat_id, :service_id, :booking_id, :ticket_id
+end
+
 class Seat < DBHandler
+  set_table :seat
+  set_columns :id, :service_id, :occupoied, :booking_id
+  has_a :service
+
   def initialize(things)
     things.each do |k|
       k.each do |s, v|
@@ -72,21 +81,30 @@ class Seat < DBHandler
   end
 
   def self.reserve(amount, service_id, boocking_id, ticket_id)
-    seats = get_empty_seats service_id
-    reserved = []
-    amount = amount.to_i
-    return 'Did not select any seats' if amount == 0
+    seats = Seats.fetch_where service_id: service_id, occupied: 0
+    raise 'Did not select any seats' if seats = []
 
-    raise 'No available seats' if amount >= seats.length
+    if seats.is_a? Array
+      raise 'No available seats' if seats.length < amount
 
-    seats.each_with_index do |seat, i|
-      break if i >= amount
+      seats.each_with_index do |seat, index|
+        next if index >= amount
 
-      assign seat['id']
-      reserved << seat['id']
-      execute 'INSERT INTO seats_connector (seat_id, service_id, booking_id, ticket_id) VALUES (?,?,?,?)',
-              seat['id'], service_id, boocking_id, ticket_id
+        seat.occupied = 1
+        seat.boocking_id = boocking_id
+        temp = SeatConnector.new(seat_id: seat.id, service_id: service_id, booking_id: boocking_id, ticket_id: ticket_id)
+        temp.save
+        seat.save
+      end
     end
+    # seats.each_with_index do |seat, i|
+    #   break if i >= amount
+
+    #   assign seat['id']
+    #   reserved << seat['id']
+    #   execute 'INSERT INTO seats_connector (seat_id, service_id, booking_id, ticket_id) VALUES (?,?,?,?)',
+    #           seat['id'], service_id, boocking_id, ticket_id
+    # end
     Service.update_empty_seats service_id
     reserved
   end
