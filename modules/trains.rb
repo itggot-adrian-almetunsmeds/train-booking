@@ -7,7 +7,7 @@ class Train < DBHandler
   attr_writer :status, :main_location, :type_id
 
   # Creates a new train
-  def initialize(id = nil) # rubocop:disable Metrics/MethodLength
+  def initialize(id = nil)
     if id.nil?
       @status = 'operational'
       @main_location = "G\xC3\xB6teborg C"
