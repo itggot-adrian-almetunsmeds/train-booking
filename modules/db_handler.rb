@@ -1,54 +1,132 @@
 # frozen_string_literal: true
 
 require 'sqlite3'
-class DataHolder
+
+# Creates a new class dynamically.
+class ClassFactory
+  def self.create_class(new_class, parent, *fields)
+    c = Class.new(parent) do
+      fields.each do |field|
+        define_method field.intern do
+          instance_variable_get("@#{field}")
+        end
+        define_method "#{field}=".intern do |arg|
+          instance_variable_set("@#{field}", arg)
+        end
+      end
+    end
+
+    Object.const_set new_class, c
+  end
 end
 
 # A class handeling a databse object
 class DBHandler # rubocop:disable Metrics/ClassLength
   attr_accessor :table, :tables
-  # Initializes a new database handler and provices all arguments
-  def initialize(db_path = nil)
-    @db = if db_path.nil?
-            connect('db/data.db')
-          else
-            connect(db_path)
-          end
-    @table = @@table unless defined?(@@table).nil?
-    @table ||= self.class
-    @tables = @@tables unless defined?(@@tables).nil?
-    @tables ||= nil
+
+  # Initializes a new instance of an object and sets provided data
+  def initialize(params)
+    raise 'No data provided' unless params.is_a? Hash
+
+    params.each do |key, value|
+      instance_variable_set("@#{key}", value)
+      singleton_class.send(:attr_accessor, key.to_s)
+    end
+  end
+
+  # Writes an object to db
+  #
+  # Returns nothing
+  def save
+    if instance_variables.include? :@id # Update
+      update self, self.class.to_s.downcase
+      # TODO: Switch from self.class to @table.
+      # FIXME:
+      #
+      # Did not work on when I tried but this should also work relatively good.
+    else # Insert
+      hash = {}
+      instance_variables.map { |q| hash[q.to_s.gsub('@', '')] = instance_variable_get(q) }
+      id = insert hash, self.class.to_s.downcase
+      instance_variable_set(:@id, id)
+      singleton_class.send(:attr_accessor, :id)
+    end
+  end
+
+  # Updates a object using provided table
+  #
+  # object - Object to be updated
+  # table - DB table to update (String)
+  #
+  # Returns nothing
+  def update(object, table)
+    variables = object.instance_variables
+    values = []
+    query = "UPDATE #{table} SET "
+    variables.each_with_index do |var, index|
+      next unless object.instance_variable_get(var).is_a?(String) ||
+                  object.instance_variable_get(var).is_a?(Integer)
+
+      query += if index.zero?
+                 " #{var.to_s.gsub('@', '')} = ?"
+               else
+                 ", #{var.to_s.gsub('@', '')} = ?"
+               end
+      values << object.instance_variable_get(var)
+    end
+    query += ' WHERE id = ?'
+    values << object.instance_variable_get(:@id)
+    DBHandler.execute(query, values.flatten[0..-1])
   end
 
   #########################################################
   # PUBLIC METHODS
   # CONFIGURING / SET UP
 
-  # Configures what to join and on what
-  # Class wide
-
-  # Class wide
   # Sets table
-  def self.SET_TABLE(string)
-    @@table = string
+  def self.set_table(string)
+    @table = string
   end
 
-  # Class wide
+  class << self
+    attr_reader :table
+  end
+
   # Sets joins
-  def self.HAS_MANY(*tables)
-    @@tables = tables
+  def self.has_a(tables)
+    if @tables.nil?
+      @tables = [tables]
+    else
+      @tables << tables
+    end
+    return unless class_exists?(tables.to_s.downcase.capitalize)
+
+    if @columns.nil?
+      @columns = [Object.const_get(tables.to_s.downcase.capitalize).columns]
+    else
+      @columns << Object.const_get(tables.to_s.downcase.capitalize).columns
+    end
+    @columns = @columns.flatten
+    @tables[-1] = { "#{@tables.last.to_sym}": Object.const_get(tables.to_s.downcase.capitalize).tables }
   end
 
-  # Instance specific
-  # Sets joins
-  def has_many(*tables)
-    @tables = tables
+  class << self
+    attr_reader :tables
   end
 
-  # Instance specific
-  # Sets table
-  def self.table(table)
-    @table = table
+  # Sets columns
+  def self.set_columns(*symbols)
+    symbols = symbols.flatten.map { |x| x = "#{@table}.#{x}" unless x.to_s.include?('.'); x }
+    if @columns.nil?
+      @columns = symbols.flatten
+    else
+      @columns << symbols.flatten
+      @columns = @columns.flatten
+    end
+  end
+
+  class << self
+    attr_reader :columns
   end
 
   # Connects to the database
@@ -56,70 +134,96 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # If a db already excists then return it
   #
   # Returns a database objekt
-  def connect(path)
+  def self.connect(path = nil)
+    path = 'db/data.db' if path.nil?
     @db ||= SQLite3::Database.new(path)
     @db.results_as_hash = true
     @db
   end
   ######################
-  # FETCHING/UPDATING/INSERTING/CREATING
-
-  # Fetches a entry based on the id
-  def fetch_by_id(id, table = nil)
-    if table.is_a?(String) || table.is_a?(Symbol)
-      table = @table if table.nil?
-      sql_operator table: @table, where: "#{table}.id = #{id}", join: @tables
-    else
-      raise 'Provided table is invalid'
-    end
-  end
+  # FETCHING/UPDATING/INSERTING/CREATING/DELETING
 
   # Fetches all entries given a table (Alternative)
-  def all
+  def self.all
     fetch_all
   end
 
   # Fetches all entries given a table
-  def fetch_all
+  def self.fetch_all
     sql_operator(
       table: @table,
-      join: @tables
+      join: @tables,
+      select: @columns
     )
   end
 
-  def fetch_first(num = nil)
+  # Fetches a entry based on the id
+  # Returns the object
+  def self.fetch_by_id(id, table = nil)
+    table = @table if table.nil?
+    raise 'Provided table is invalid' unless table.is_a?(String) || table.is_a?(Symbol)
+
+    sql_operator table: @table, where: "#{table}.id = #{id}", join: @tables, select: @columns
+  end
+
+  # Fetches a entry based on the id (Alternative)
+  # Returns the object
+  def self.with_id(id, table = nil)
+    fetch_by_id(id, table)
+  end
+
+  # Fetches the first rows
+  #
+  # num - Number or rows to fetch
+  #
+  # Returns objects containing the given sql response
+  def self.fetch_first(num = nil)
     if num.nil?
       sql_operator(
         table: @table,
         join: @tables,
-        limit: 1
+        limit: 1,
+        select: @columns
       )
     else
       sql_operator(
         table: @table,
         join: @tables,
-        limit: num
+        limit: num,
+        select: @columns
       )
     end
   end
 
-  def fetch_last(num = nil)
+  # Fetches the last rows
+  #
+  # num - Number or rows to fetch
+  #
+  # Returns objects containing the given sql response
+  def self.fetch_last(num = nil)
     if num.nil?
       sql_operator(
         table: @table,
         join: @tables,
-        limit: -1
+        limit: -1,
+        select: @columns
       )
     else
       sql_operator(
         table: @table,
         join: @tables,
-        limit: -num
+        limit: -num,
+        select: @columns
       )
     end
   end
 
-  def find_by(params)
+  # Fetches where conditions are met
+  #
+  # params - where params (Array - Hash, String)
+  #
+  # Returns objects containing the given sql response
+  def self.fetch_where(params)
     if params.is_a? Hash
       holder = []
       params.each do |key, value|
@@ -128,17 +232,30 @@ class DBHandler # rubocop:disable Metrics/ClassLength
       sql_operator(
         table: @table,
         join: @tables,
-        where: holder
+        where: holder,
+        select: @columns
       )
     else
       sql_operator(
         table: @table,
         join: @tables,
-        where: params
+        where: params,
+        select: @columns
       )
     end
   end
 
+  # Fetche_where (Alternative)
+  def self.fetch_by_condition(*conditions)
+    fetch_where(conditions.first)
+  end
+
+  # Inserts data into the db
+  #
+  # data - Hash
+  # table - String (Optional)
+  #
+  # Returns nothing
   def insert(data, table = nil)
     table = @table if table.nil?
     insert!(data, table)
@@ -146,16 +263,12 @@ class DBHandler # rubocop:disable Metrics/ClassLength
 
   # Decides if the provided argument has to be processed before execution
   # Public for use in special sql queries
-  def sql_operator(*args)
-    if args.is_a? String
-      # TODO: execute
-    else
-      sql_operator!(args)
-    end
+  def self.sql_operator(*args)
+    sql_operator!(args)
   end
 
   #########################################################
-  # PRIVATE METHODS
+  # "PRIVATE" METHODS
 
   ######################
   # VALIDATORS
@@ -165,7 +278,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # arg - Data to validate
   #
   # Returns the table unless ther is an error
-  private def validate_table_input(arg)
+  def self.validate_table_input(arg)
     raise 'A hash is not a valid input format for table' if arg.is_a? Hash
 
     if arg.is_a? Array
@@ -180,33 +293,70 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   ######################
   # CONSTRUCTORS
 
-  # Objectifies entered data. Either initializing a new object instance with the 
+  # Objectifies entered data. Either initializing a new object instance with the
   # given data or updates a excisting instance
-  # 
+  #
   # array - Array or Array containing a Hash containing data
   # class_holder - "Origin" instance
   #
   # Returns nothing
-  private def object_constructor(array, class_holder)
+  def self.object_constructor(array, class_holder)
+    p array
     if array.length == 1
+      array = array.flatten
+      object_holder = []
       array.first.each do |string, value|
-        string = string.to_s.gsub('.', '_')
-        class_holder.instance_variable_set("@#{string}", value)
-        class_holder.class.send(:attr_reader, string.to_sym)
+        unless class_exists?(string.split('.')[0].capitalize)
+          ClassFactory.create_class string.split('.')[0].capitalize, DBHandler
+          # There was no class with the given name.
+          # Creating a new class to store the additional data
+        end
+        clazz = Object.const_get(string.split('.')[0].capitalize)
+        string = string.split('.').last
+        string = string.gsub('@', '')
+
+        set = false
+        object_holder.each do |temp|
+          # Checks if there is a class in the object holder that matches the gathered data
+          next unless temp.class == clazz
+
+          temp.instance_variable_set("@#{string}", value)
+          temp.class.send(:attr_accessor, string.to_sym)
+          set = true
+        end
+        next if set
+
+        temp = clazz.new("#{string}": value)
+        temp.class.send(:attr_accessor, string.to_sym)
+        object_holder << temp
+        # TODO: Check if removing .class above works. If so
+        # go with that method
+        # This is based on the singleton_class thought, that only said instance
+        # needs the attr_reader and not the class itself.
+      end
+      object_holder.each do |object|
+        next unless object.class == self
+
+        object_holder.each do |clazz|
+          unless object.class == clazz.class
+            object.instance_variable_set("@#{clazz.class.to_s.downcase}", clazz)
+            object.class.send(:attr_accessor, clazz.class.to_s.downcase.to_sym)
+          end
+        end
+        return object
       end
     else
-      p array
+      content_holder = []
       array.each do |hash|
         object_holder = []
         hash.each do |string, value|
           set = false
-          begin
-            clazz = Object.const_get(string.split('.')[0].capitalize)
-          rescue StandardError
-            clazz = Object.const_get('DataHolder')
+          unless class_exists?(string.split('.')[0].capitalize)
+            ClassFactory.create_class string.split('.')[0].capitalize, DBHandler
             # There was no class with the given name.
-            # Using DataHolder class to store the additional data
+            # Creating a new class to store the additional data
           end
+          clazz = Object.const_get(string.split('.')[0].capitalize)
           string = string.split('.')[1] if string.split('.').length > 1
 
           object_holder.each do |temp|
@@ -214,43 +364,67 @@ class DBHandler # rubocop:disable Metrics/ClassLength
             next unless temp.class == clazz
 
             temp.instance_variable_set("@#{string}", value)
-            temp.class.send(:attr_reader, string.to_sym)
+            temp.class.send(:attr_accessor, string.to_sym)
             set = true
           end
 
           # If there was no object with set class create a new instance of it
           next if set
 
-          temp = clazz.new
-          temp.instance_variable_set("@#{string.downcase}", value)
-          temp.class.send(:attr_reader, string.to_sym)
+          temp = clazz.new("#{string.to_sym}": value)
           object_holder << temp
         end
-
         object_holder.each do |temporary_holder|
           # Gets the current values if there are some
           temp = class_holder.instance_variable_get("@#{temporary_holder.class.to_s.downcase}")
           # If there was a value add the newly created ones
-          class_holder.instance_variable_set("@#{temporary_holder.class.to_s.downcase}", [temp, temporary_holder].flatten) unless temp.nil?
+          unless temp.nil?
+            class_holder.instance_variable_set("@#{temporary_holder.class.to_s.downcase}",
+                                               [temp, temporary_holder].flatten)
+          end
           # Else set the newly created ones
-          class_holder.instance_variable_set("@#{temporary_holder.class.to_s.downcase}", temporary_holder) if temp.nil?
-          class_holder.class.send(:attr_reader, temporary_holder.class.to_s.downcase.to_sym)
+          if temp.nil?
+            class_holder.instance_variable_set("@#{temporary_holder.class.to_s.downcase}",
+                                               temporary_holder)
+          end
+          class_holder.class.send(:attr_accessor, temporary_holder.class.to_s.downcase.to_sym)
+        end
+
+        object_holder.each do |object|
+          next unless object.class == class_holder
+
+          object_holder.each do |clazz|
+            unless object.class == clazz.class
+              object.instance_variable_set("@#{clazz.class.to_s.downcase}", clazz)
+              object.class.send(:attr_accessor, clazz.class.to_s.downcase.to_sym)
+            end
+          end
+          content_holder << object
         end
       end
+      content_holder.flatten
     end
   end
 
   # Constructs selects
   #
   # Returns selects as SQL - Query (Partial string)
-  private def select_constructor(value, table)
+  def self.select_constructor(value, table)
     selects = 'SELECT'
+    raise 'No columns provided' if value.nil?
+
     if value.is_a?(Symbol) || value.is_a?(String)
       selects = "SELECT #{value} FROM #{table}"
     else
       value.each do |item|
-        item = item.to_s.gsub(/\s+/, '_')
-        selects += " #{item} AS '#{item}',"
+        set = false
+        item.split(' ').each { |z| set = true if z.downcase == 'as' }
+        if set
+          selects += " #{item},"
+        else
+          item = item.to_s.gsub(/\s+/, '_')
+          selects += " #{item} AS '#{item}',"
+        end
       end
       selects = selects[0..-2] + " FROM #{table}"
     end
@@ -260,22 +434,28 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # Constructs wheres
   #
   # Reutrns a Array containing wheres as SQL - Query (Partial String), and associated values
-  private def where_constructor(value)
+  def self.where_constructor(value, table)
+    if value.is_a? Array
+      value = value.flatten
+      value = value.first if value.length == 1
+    end
+
     where = ' WHERE '
     values = []
     if value.is_a? String
-      wheres = value.split('=')
-      wheres.each_with_index do |temp, index|
-        where += "#{temp} = ?" unless index.odd?
-        values << temp if index.odd?
-      end
+      wheres = value.split(' ')
+      wheres[0] = "#{table}.id" if wheres.first.downcase == 'id'
+      where += "#{wheres.first} #{wheres[1].upcase} ?"
+      values << wheres.last
     elsif value.is_a? Hash
       keys = value.keys
       keys.each_with_index do |key, index|
+        p value[key]
         if value[key].is_a?(String) || value[key].is_a?(Integer) ||
            value[key].is_a?(Symbol) || !!value[key] == value[key] # Boolean?
           temp = value[key]
           temp = temp.to_s if temp.is_a? Symbol
+          key = "#{table}.id" if key.downcase == 'id'
           where += if index.zero?
                      " #{key} = ?"
                    else
@@ -298,18 +478,14 @@ class DBHandler # rubocop:disable Metrics/ClassLength
       end
     elsif value.is_a? Array
       value.each_with_index do |value, i|
-        wheres = value.split('=')
-        wheres.each_with_index do |temp, index|
-          if index.odd?
-            values << temp
-          else
-            where += if i.zero?
-                       "#{temp} = ?"
-                     else
-                       " AND #{temp} = ?"
-                     end
-          end
-        end
+        wheres = value.split(' ')
+        wheres[0] = "#{table}.id" if wheres.first.downcase == 'id'
+        where += if i.zero?
+                   "#{wheres.first} #{wheres[1].upcase} ?"
+                 else
+                   " AND #{wheres.first} #{wheres[1].upcase} ?"
+                 end
+        values << wheres.last
       end
     end
     [where, values]
@@ -318,7 +494,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # Consstructs joins
   #
   # Returns joins as SQL - query (Partial String)
-  private def join_constructor(joins, table, type = 'LEFT')
+  def self.join_constructor(joins, table, type = 'LEFT')
     sql_join = ''
     if joins.is_a? String
       sql_join = " #{type} JOIN #{joins}" if joins.downcase.include?('on')
@@ -377,7 +553,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # Constructs order
   #
   # Returns order as SQL - Query (Partial String)
-  private def order_constructor(value)
+  def self.order_constructor(value)
     raise 'Option Limit is not a hash.' unless value.is_a? Hash
 
     if value.keys.include?(:table) && value.keys.include?(:order)
@@ -392,12 +568,19 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   end
 
   ######################
-  # GENERAL PRIVATE METHODS
+  # GENERAL "PRIVATE" METHODS
+
+  def self.class_exists?(class_name)
+    klass = Module.const_get(class_name)
+    klass.is_a?(Class)
+  rescue NameError
+    false
+  end
 
   # Acts as manager for construction of SQL queries
   #
   # Returns a list of lists containing objects representing databases entries
-  private def sql_operator!(args)
+  def self.sql_operator!(args)
     args = args.first
     raise 'No table provided' unless args.keys.include? :table
 
@@ -415,7 +598,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
       when :join
         join = join_constructor(value, args[:table])
       when :where
-        temp = where_constructor(value)
+        temp = where_constructor(value, args[:table])
         where = temp[0]
         values << temp[1]
       when :limit
@@ -431,19 +614,14 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     end
     selects = "SELECT * FROM #{args[:table]}" if selects == 'SELECT'
     sqlquery = "#{selects} #{join} #{where} #{order} #{limit}"
-    p sqlquery
-    p values
-    object_constructor execute(sqlquery, values[0..-1]), self
-    # if ^^.length == 1
-
-    # end
+    object_constructor execute(sqlquery, values.flatten[0..-1]), self
   end
 
   # Insert method
   #
-  # Reutrns nothing
+  # Reuturns id
   private def insert!(data, table)
-    if data.is_a? Object
+    if !data.is_a? Hash
       write_to_db(data, table)
     else
       raise 'Data input needs to be a hash.' unless data.is_a? Hash
@@ -490,13 +668,18 @@ class DBHandler # rubocop:disable Metrics/ClassLength
 
     execute("INSERT INTO #{table} (#{k}) VALUES (#{x})", q)
   end
+
   # Executes given sql code like SQLite3 gem
   #
   # sql - String (SQL code)
   # values - Array containing a list of values (optional)
   #
   # Returns sqlresult as hash
-  private def execute(sql, *values)
+  def self.execute(sql, *values)
+    p '__________________________'
+    p sql
+    p values
+    @db ||= DBHandler.connect
     if values == []
       @db.execute(sql)
     elsif values[0].is_a? Array
@@ -506,105 +689,34 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     end
   end
 
-  def self.with_condition(table, conditions, values)
-    execute("SELECT * FROM #{table} #{conditions}", values)
-  end
-
-  # Retrives all data from a given table
-  #
-  # Returns database values as hash
-  def self.all(table)
-    execute("SELECT * FROM #{table}")
-  end
-
-  # Retrives data from database table from row with given id
-  #
-  # table - String (Name of table)
-  # id = String/Integer (id of row in db)
-  #
-  # Returns database values as hash
-  def self.with_id(table, id)
-    execute("SELECT * FROM #{table} WHERE id = ?", id).first
-  end
-
-  # Retrives the last row from a given table
-  #
-  # table - String (Name of table)
-  # amount - Integer (Optional, number of rows to retrive)
-  #
-  # Returns database values as hash
-  def self.last(table, amount = 1)
-    execute("SELECT * FROM #{table} ORDER BY ID DESC LIMIT ?", amount)
-  end
-
-  # Writes an object into a given table
-  #
-  # table - String (Name of table)
-  # object - Object to be written to table
-  #
-  # Returns the id of the new record (most of the time)
-  def self.write_to_db(table, object)
-    z = object.instance_variables
-    q = []
-    k = []
-    # Returns values and their table
-    z.each_with_index do |_, i|
-      q << object.instance_variable_get(z[i])
-      k << z[i].to_s.gsub('@', '')
-    end
-    k = k.to_s.gsub('[', '')
-    k = k.to_s.gsub(']', '')
-
-    # Handles generation of SQLInjection protection
-    x = '?'
-    if z.length > 1
-      (z.length - 1).times do
-        x += ',?'
-      end
-    end
-
-    execute("INSERT INTO #{table} (#{k}) VALUES (#{x})", q)
-    last(table)
-  end
-
-  def save(table = nil, options = nil)
-    p options
-    object = if options.nil? || options['object'].nil?
-               self
-             else
-               options['object']
-             end
-    q = []
-    k = []
-    if options.nil? || options[:params].nil?
-      z = object.instance_variables
-      z.each_with_index do |_, i|
-        q << object.instance_variable_get(z[i]) unless z[i].to_s.gsub('@', '') == 'id'
-        k << z[i].to_s.gsub('@', '') unless z[i].to_s.gsub('@', '') == 'id'
-      end
-      q << object.id
+  # Returns id
+  def execute(sql, *values)
+    p '__________________________'
+    p sql
+    p values
+    # Inserts
+    @db ||= DBHandler.connect
+    @db.transaction
+    if values == []
+      @db.execute(sql)
+    elsif values[0].is_a? Array
+      @db.execute(sql, values[0][0..-1])
     else
-      options[:params].each do |param|
-        q << param[:value]
-        k << param[:key]
-      end
+      @db.execute(sql, values[0..-1])
     end
-    u = ''
-    k.each_with_index do |_, i|
-      u += "#{k[i]} = ?,"
+    if sql.include?('INSERT')
+      table = sql.split(' ')[2]
+      object = DBHandler.sql_operator(
+        table: table,
+        limit: -1,
+        select: :id
+      ).first
+      id = object.first.id if object.is_a? Array
+      id = object.id unless object.is_a? Array
     end
-    q << options[:id] if !options.nil? && !options[:params].nil?
-
-    u = u.chomp(',')
-    DBHandler.execute("UPDATE #{table} SET #{u} WHERE id = ?", q)
-    # TODO: Can this be made to self.save or similar?
+    @db.commit
+    id
   end
 end
 
-DBHandler.object_constructor([{ potatis: 'hey', 'This.string.contains.periods': 23_412 }])
-
-# DBHandler.sql_operator(
-#   select: ['bookings.id'],
-#   table: :bookings,
-#   join: [services: ['platforms AS dep ON services.departure_id = dep.id', 'platforms AS arr ON services.arrival_id = arr.id'], booking_connector: [:tickets]]
-# )
+# require_relative 'data_holder' # Needs to be placed at the bottom due to load priority
