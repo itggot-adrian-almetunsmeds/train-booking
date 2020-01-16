@@ -8,6 +8,7 @@ RSpec.describe 'DBHandler:' do # rubocop:disable Metrics/BlockLength
   Seeder.seed!
   context 'When testing the DBHandler class' do # rubocop:disable Metrics/BlockLength
     handler = DBHandler.new
+    p handler
 
     it 'the DBHandler object should have instance variables defined' do
       expect(
