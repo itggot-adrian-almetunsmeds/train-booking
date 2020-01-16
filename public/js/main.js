@@ -11,7 +11,8 @@ function sendTicket() {
         for (input of inputs) {
             tickets.push({
                 id: input.name.replace('ticket', ''),
-                amount: input.attributes[4].value
+                amount: input.attributes[4].value,
+                booking_id: window.location.href.split('/')[window.location.href.split('/').length - 1]
             });
         }
     } else {

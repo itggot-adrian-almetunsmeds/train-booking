@@ -6,7 +6,7 @@ require_relative 'modules/user'
 # require_relative 'modules/services'
 
 # Handeles server routes
-class Server < Sinatra::Base # rubocop:disable Metrics/ClassLength
+class Server < Sinatra::Base
   enable :sessions
   # Redirects a user visiting a admin page if they are not logged in and have admin rights
   before '/admin' do
@@ -67,17 +67,15 @@ class Server < Sinatra::Base # rubocop:disable Metrics/ClassLength
 
   get '/service/:id' do
     @service = Service.with_id(params['id'])
-    @dep = DBHandler.execute('SELECT * FROM destinations WHERE id = ?', @service['departure_id'])
-    @arr = DBHandler.execute('SELECT * FROM destinations WHERE id = ?', @service['arrival_id'])
-    @service['departure_time'] = DateTime.strptime(@service['departure_time'], '%s')
-    @service['arrival_time'] = DateTime.strptime(@service['arrival_time'], '%s')
-    @tickets = Service.tickets(params['id'])
+    @service.departure_time = DateTime.strptime(@service.departure_time, '%s')
+    @service.arrival_time = DateTime.strptime(@service.arrival_time, '%s')
+    @tickets = @service.tickets
     slim :booking
   end
   ##########################################################################
   post '/login' do
     if User.excists? params['email']
-      user = User.new(params['email'])
+      user = User.fetch_where email: params['email']
       if BCrypt::Password.new(user.password) == params[:password]
         session[:user_id] = user.id
       else
@@ -95,6 +93,7 @@ class Server < Sinatra::Base # rubocop:disable Metrics/ClassLength
       redirect back
     else
       user = User.new(params)
+      user.save
       session[:user_id] = user.id
       redirect '/'
     end
@@ -102,6 +101,7 @@ class Server < Sinatra::Base # rubocop:disable Metrics/ClassLength
 
   post '/logout' do
     session[:user_id] = nil
+    session.clear
     redirect back
   end
 

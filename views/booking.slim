@@ -2,19 +2,19 @@ script $(function() {$(".spinner").spinner();});
 
 table
     tr
-        td= @service['name']
+        td= @service.name
         td
-            p= @dep.first['name']
-            p= @service['departure_time']
+            p= @service.dep.name
+            p= @service.departure_time
         td
-            p= @arr.first['name']
-            p= @service['arrival_time']
+            p= @service.arr.name
+            p= @service.arrival_time
 
 - @tickets.each do |z|
-    p Ticket type: #{z['name']}
-    p #{z['price']} SEK
-    p Potential points: #{z['points']}
-    input type="text" class="spinner" value="0" name="ticket#{z['ticket_id']}"
+    p Ticket type: #{z.name}
+    p #{z.price} SEK
+    p Potential points: #{z.points}
+    input type="text" class="spinner" value="0" name="ticket#{z.id}"
 br
 br
 button#submitticket type="submit" Continue

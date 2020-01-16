@@ -6,7 +6,7 @@ a href="#{@back_url}" Back
 - if @service
     - if @service.is_a? Array
         - @service.each do |entity|
-            a href="/service/#{entity['id'] }"
+            a href="/service/#{entity.id}"
                 table
                     tr
                         th style="width: 20vw" Line
@@ -14,29 +14,28 @@ a href="#{@back_url}" Back
                         th style="width: 5wv" Arrival Time
                         th style="width: 4wv" Empty Seats
                     tr
-                        td= entity['name']
+                        td= entity.name
                         td
                             div 
-                                p= entity['departure']
-                                p= DateTime.strptime(entity['departure_time'],'%s')
+                                p= entity.dep.name
+                                p= DateTime.strptime(entity.departure_time,'%s')
                         td
                             div 
-                                p= entity['arrival']
-                                p= DateTime.strptime(entity['arrival_time'],'%s')
-                        td= entity['empty_seats']
-
+                                p= entity.arr.name
+                                p= DateTime.strptime(entity.arrival_time,'%s')
+                        td= entity.empty_seats
 
     - else
-        a href="/service/#{@service['id']}"
+        a href="/service/#{@service.id}"
             table
                 tr
-                    td= @service['name']
+                    td= @service.name
                     td
                         div
-                            p= @service['departure']
-                            p= DateTime.strptime(@service['departure_time'],'%s')
+                            p= @service.dep.name
+                            p= DateTime.strptime(@service.departure_time,'%s')
                     td
                         div
-                            p= @service['arrival']
-                            p= DateTime.strptime(@service['arrival_time'],'%s')
-                    td= @service['empty_seats']
+                            p= @service.arr.name
+                            p= DateTime.strptime(@service.arrival_time,'%s')
+                    td= @service.empty_seats
