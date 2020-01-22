@@ -298,7 +298,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Fetches all entries given a table (Alternative).</p>
+<p>Updates a object using provided table.</p>
 </div></span>
   
 </li>
@@ -322,7 +322,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>GENERAL “PRIVATE” METHODS.</p>
+<p>Checks if a class is defined.</p>
 </div></span>
   
 </li>
@@ -370,7 +370,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Executes given sql code like SQLite3 gem.</p>
+<p>Executes given sql query like SQLite3 gem.</p>
 </div></span>
   
 </li>
@@ -442,7 +442,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Fetches a entry based on the id Returns the object.</p>
+<p>Fetches a entry based on the id.</p>
 </div></span>
   
 </li>
@@ -706,7 +706,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Decides if the provided argument has to be processed before execution Public for use in special sql queries.</p>
+<p>Decides if the provided argument has to be processed before execution.</p>
 </div></span>
   
 </li>
@@ -730,7 +730,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Acts as manager for construction of SQL queries.</p>
+<p>Constructs the additional joines from joined in tables.</p>
 </div></span>
   
 </li>
@@ -802,7 +802,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Fetches a entry based on the id (Alternative) Returns the object.</p>
+<p>Fetches a entry based on the id (Alternative).</p>
 </div></span>
   
 </li>
@@ -835,7 +835,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns id.</p>
+<p>Executes given sql query like SQLite3 gem.</p>
 </div></span>
   
 </li>
@@ -971,17 +971,17 @@
       <pre class="lines">
 
 
-28
-29
-30
-31
-32
-33
 34
-35</pre>
+35
+36
+37
+38
+39
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 28</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>No data provided</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Hash</span>
@@ -1029,12 +1029,12 @@
       <pre class="lines">
 
 
-129
-130
-131</pre>
+147
+148
+149</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 129</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 147</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_columns'>columns</span>
   <span class='ivar'>@columns</span>
@@ -1072,12 +1072,12 @@
       <pre class="lines">
 
 
-92
-93
-94</pre>
+102
+103
+104</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 92</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 102</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_table'>table</span>
   <span class='ivar'>@table</span>
@@ -1115,12 +1115,12 @@
       <pre class="lines">
 
 
-114
-115
-116</pre>
+128
+129
+130</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 114</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 128</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tables'>tables</span>
   <span class='ivar'>@tables</span>
@@ -1163,12 +1163,12 @@
       <pre class="lines">
 
 
-25
-26
-27</pre>
+31
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 31</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_table'>table</span>
   <span class='ivar'>@table</span>
@@ -1206,12 +1206,12 @@
       <pre class="lines">
 
 
-25
-26
-27</pre>
+31
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 31</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_tables'>tables</span>
   <span class='ivar'>@tables</span>
@@ -1240,7 +1240,13 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Fetches all entries given a table (Alternative)</p>
+<p>Updates a object using provided table</p>
+
+<p>object - Object to be updated table - DB table to update (String)</p>
+
+<p>Returns nothing Fetches all entries given a table (Alternative)</p>
+
+<p>Returns returned object or Array of Objects</p>
 
 
   </div>
@@ -1254,12 +1260,12 @@
       <pre class="lines">
 
 
-147
-148
-149</pre>
+179
+180
+181</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 147</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 179</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_all'>all</span>
   <span class='id identifier rubyid_fetch_all'>fetch_all</span>
@@ -1281,7 +1287,11 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>GENERAL “PRIVATE” METHODS</p>
+<p>Checks if a class is defined</p>
+
+<p>class_name - (String) Class name. Case sensetive</p>
+
+<p>Returns true or false</p>
 
 
   </div>
@@ -1308,15 +1318,15 @@
       <pre class="lines">
 
 
-573
-574
-575
-576
-577
-578</pre>
+651
+652
+653
+654
+655
+656</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 573</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 651</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class_exists?'>class_exists?</span><span class='lparen'>(</span><span class='id identifier rubyid_class_name'>class_name</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_klass'>klass</span> <span class='op'>=</span> <span class='const'>Module</span><span class='period'>.</span><span class='id identifier rubyid_const_get'>const_get</span><span class='lparen'>(</span><span class='id identifier rubyid_class_name'>class_name</span><span class='rparen'>)</span>
@@ -1343,6 +1353,8 @@
     
 <p>Connects to the database</p>
 
+<p>path - (String) Optional path to db</p>
+
 <p>If a db already excists then return it</p>
 
 <p>Returns a database objekt</p>
@@ -1359,15 +1371,15 @@
       <pre class="lines">
 
 
-137
-138
-139
-140
-141
-142</pre>
+157
+158
+159
+160
+161
+162</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 137</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 157</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_connect'>connect</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>db/data.db</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1392,9 +1404,9 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Executes given sql code like SQLite3 gem</p>
+<p>Executes given sql query like SQLite3 gem</p>
 
-<p>sql - String (SQL code) values - Array containing a list of values (optional)</p>
+<p>sql - String (SQL query) values - Array containing a list of values (optional)</p>
 
 <p>Returns sqlresult as hash</p>
 
@@ -1410,22 +1422,22 @@
       <pre class="lines">
 
 
-678
-679
-680
-681
-682
-683
-684
-685
-686
-687
-688
-689
-690</pre>
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 678</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 766</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='id identifier rubyid_sql'>sql</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_values'>values</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_p'>p</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>__________________________</span><span class='tstring_end'>&#39;</span></span>
@@ -1459,6 +1471,8 @@
     
 <p>Fetches all entries given a table</p>
 
+<p>Returns returned object or Array of Objects</p>
+
 
   </div>
 </div>
@@ -1471,16 +1485,16 @@
       <pre class="lines">
 
 
-152
-153
-154
-155
-156
-157
-158</pre>
+186
+187
+188
+189
+190
+191
+192</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 152</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 186</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_fetch_all'>fetch_all</span>
   <span class='id identifier rubyid_sql_operator'>sql_operator</span><span class='lparen'>(</span>
@@ -1520,12 +1534,12 @@
       <pre class="lines">
 
 
-249
-250
-251</pre>
+307
+308
+309</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 249</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 307</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_fetch_by_condition'>fetch_by_condition</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_conditions'>conditions</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_fetch_where'>fetch_where</span><span class='lparen'>(</span><span class='id identifier rubyid_conditions'>conditions</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span><span class='rparen'>)</span>
@@ -1547,7 +1561,11 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Fetches a entry based on the id Returns the object</p>
+<p>Fetches a entry based on the id</p>
+
+<p>id - (Integer, String, Symbol) ID of row to fetch table - (String, Symbol) Optional table to fetch from.</p>
+
+<p>Returns the object</p>
 
 
   </div>
@@ -1561,15 +1579,15 @@
       <pre class="lines">
 
 
-162
-163
-164
-165
-166
-167</pre>
+216
+217
+218
+219
+220
+221</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 162</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 216</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_fetch_by_id'>fetch_by_id</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_table'>table</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_table'>table</span> <span class='op'>=</span> <span class='ivar'>@table</span> <span class='kw'>if</span> <span class='id identifier rubyid_table'>table</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1612,26 +1630,26 @@
       <pre class="lines">
 
 
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196</pre>
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 180</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 238</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_fetch_first'>fetch_first</span><span class='lparen'>(</span><span class='id identifier rubyid_num'>num</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_num'>num</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1685,26 +1703,26 @@
       <pre class="lines">
 
 
-203
-204
-205
-206
-207
-208
-209
-210
-211
-212
-213
-214
-215
-216
-217
-218
-219</pre>
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 203</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 261</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_fetch_last'>fetch_last</span><span class='lparen'>(</span><span class='id identifier rubyid_num'>num</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_num'>num</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1742,7 +1760,7 @@
     
 <p>Fetches where conditions are met</p>
 
-<p>params - where params (Array - Hash, String)</p>
+<p>params - Where params (Array - Hash, String)</p>
 
 <p>Returns objects containing the given sql response</p>
 
@@ -1758,30 +1776,30 @@
       <pre class="lines">
 
 
-226
-227
-228
-229
-230
-231
-232
-233
-234
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244
-245
-246</pre>
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 226</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 284</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_fetch_where'>fetch_where</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Hash</span>
@@ -1823,6 +1841,10 @@
     
 <p>Sets joins</p>
 
+<p>tables - (Hash, Sumbol, Array) Sets @tables based on input data</p>
+
+<p>Reuturns nothing</p>
+
 
   </div>
 </div>
@@ -1835,25 +1857,25 @@
       <pre class="lines">
 
 
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
 110
-111</pre>
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 96</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 110</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_has_a'>has_a</span><span class='lparen'>(</span><span class='id identifier rubyid_tables'>tables</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='ivar'>@tables</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1890,6 +1912,8 @@
     
 <p>Consstructs joins</p>
 
+<p>joins - Tables to join (Array, Hash, String, Key) talbe - Table to join on (Key, String) type - (String, Key) Optional type of join param</p>
+
 <p>Returns joins as SQL - query (Partial String)</p>
 
 
@@ -1904,64 +1928,64 @@
       <pre class="lines">
 
 
-497
-498
-499
-500
-501
-502
-503
-504
-505
-506
-507
-508
-509
-510
-511
-512
-513
-514
-515
-516
-517
-518
-519
-520
-521
-522
-523
-524
-525
-526
-527
-528
-529
-530
-531
-532
-533
-534
-535
-536
-537
-538
-539
-540
-541
-542
-543
-544
-545
-546
-547
-548
-549
-550
-551</pre>
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 497</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 568</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_join_constructor'>join_constructor</span><span class='lparen'>(</span><span class='id identifier rubyid_joins'>joins</span><span class='comma'>,</span> <span class='id identifier rubyid_table'>table</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>LEFT</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='id identifier rubyid_sql_join'>sql_join</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
@@ -2037,7 +2061,7 @@
     
 <p>Objectifies entered data. Either initializing a new object instance with the given data or updates a excisting instance</p>
 
-<p>array - Array or Array containing a Hash containing data class_holder - “Origin” instance</p>
+<p>array - Array of Hashes or Array containing a Hash containing data class_holder - “Origin” instance (Object)</p>
 
 <p>Returns nothing</p>
 
@@ -2053,67 +2077,6 @@
       <pre class="lines">
 
 
-303
-304
-305
-306
-307
-308
-309
-310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327
-328
-329
-330
-331
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344
-345
-346
-347
-348
-349
-350
-351
-352
-353
-354
-355
-356
-357
-358
-359
-360
-361
-362
-363
 364
 365
 366
@@ -2157,10 +2120,71 @@
 404
 405
 406
-407</pre>
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 303</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 364</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_object_constructor'>object_constructor</span><span class='lparen'>(</span><span class='id identifier rubyid_array'>array</span><span class='comma'>,</span> <span class='id identifier rubyid_class_holder'>class_holder</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_p'>p</span> <span class='id identifier rubyid_array'>array</span>
@@ -2286,6 +2310,8 @@
     
 <p>Constructs order</p>
 
+<p>value - (Hash) Hash containing table and or order</p>
+
 <p>Returns order as SQL - Query (Partial String)</p>
 
 
@@ -2300,22 +2326,22 @@
       <pre class="lines">
 
 
-556
-557
-558
-559
-560
-561
-562
-563
-564
-565
-566
-567
-568</pre>
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 556</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 629</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_order_constructor'>order_constructor</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Option Limit is not a hash.</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Hash</span>
@@ -2349,6 +2375,8 @@
     
 <p>Constructs selects</p>
 
+<p>value - (String, Array, Symbol) Select columns table - (String, Symbol) Select from table</p>
+
 <p>Returns selects as SQL - Query (Partial string)</p>
 
 
@@ -2363,30 +2391,30 @@
       <pre class="lines">
 
 
-412
-413
-414
-415
-416
-417
-418
-419
-420
-421
-422
-423
-424
-425
-426
-427
-428
-429
-430
-431
-432</pre>
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 412</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 476</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_select_constructor'>select_constructor</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='comma'>,</span> <span class='id identifier rubyid_table'>table</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_selects'>selects</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>SELECT</span><span class='tstring_end'>&#39;</span></span>
@@ -2428,6 +2456,10 @@
     
 <p>Sets columns</p>
 
+<p>symbols - (Symbol, Hash, Array, String) of columns</p>
+
+<p>Returns nothing</p>
+
 
   </div>
 </div>
@@ -2440,18 +2472,18 @@
       <pre class="lines">
 
 
-118
-119
-120
-121
-122
-123
-124
-125
-126</pre>
+136
+137
+138
+139
+140
+141
+142
+143
+144</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 118</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 136</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_set_columns'>set_columns</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_symbols'>symbols</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_symbols'>symbols</span> <span class='op'>=</span> <span class='id identifier rubyid_symbols'>symbols</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='id identifier rubyid_x'>x</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='ivar'>@table</span><span class='embexpr_end'>}</span><span class='tstring_content'>.</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_x'>x</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='semicolon'>;</span> <span class='id identifier rubyid_x'>x</span> <span class='rbrace'>}</span>
@@ -2481,6 +2513,10 @@
     
 <p>Sets table</p>
 
+<p>string - (Symbol, String) of table</p>
+
+<p>Returns nothing</p>
+
 
   </div>
 </div>
@@ -2493,12 +2529,12 @@
       <pre class="lines">
 
 
-87
-88
-89</pre>
+97
+98
+99</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 87</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 97</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_set_table'>set_table</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='rparen'>)</span>
   <span class='ivar'>@table</span> <span class='op'>=</span> <span class='id identifier rubyid_string'>string</span>
@@ -2520,7 +2556,11 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Decides if the provided argument has to be processed before execution Public for use in special sql queries</p>
+<p>Decides if the provided argument has to be processed before execution</p>
+
+<p>args - Custom arguments to pass to the method</p>
+
+<p>Public for use in special sql queries</p>
 
 
   </div>
@@ -2534,12 +2574,12 @@
       <pre class="lines">
 
 
-266
-267
-268</pre>
+327
+328
+329</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 266</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 327</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_sql_operator'>sql_operator</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_sql_operator!'>sql_operator!</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
@@ -2561,7 +2601,13 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Acts as manager for construction of SQL queries</p>
+<p>Constructs the additional joines from joined in tables.</p>
+
+<p>tables - Join hash/array/string/key</p>
+
+<p>Returns the additional joins from a given class (String) Acts as manager for construction of SQL queries</p>
+
+<p>args - (Hash) Hash of &#39;arguments&#39; to be constructed and then executed</p>
 
 <p>Returns a list of lists containing objects representing databases entries</p>
 
@@ -2577,45 +2623,45 @@
       <pre class="lines">
 
 
-583
-584
-585
-586
-587
-588
-589
-590
-591
-592
-593
-594
-595
-596
-597
-598
-599
-600
-601
-602
-603
-604
-605
-606
-607
-608
-609
-610
-611
-612
-613
-614
-615
-616
-617
-618</pre>
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 583</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 668</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_sql_operator!'>sql_operator!</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_args'>args</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
@@ -2688,20 +2734,20 @@
       <pre class="lines">
 
 
-281
-282
-283
-284
-285
-286
-287
-288
-289
-290
-291</pre>
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 281</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 342</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_validate_table_input'>validate_table_input</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>A hash is not a valid input format for table</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Hash</span>
@@ -2733,6 +2779,8 @@
     
 <p>Constructs wheres</p>
 
+<p>value - (Array, Hash, String) SQL where params/ params as hash table - (String, Key/Symbol) Table for where the condition applies</p>
+
 <p>Reutrns a Array containing wheres as SQL - Query (Partial String), and associated values</p>
 
 
@@ -2747,65 +2795,65 @@
       <pre class="lines">
 
 
-437
-438
-439
-440
-441
-442
-443
-444
-445
-446
-447
-448
-449
-450
-451
-452
-453
-454
-455
-456
-457
-458
-459
-460
-461
-462
-463
-464
-465
-466
-467
-468
-469
-470
-471
-472
-473
-474
-475
-476
-477
-478
-479
-480
-481
-482
-483
-484
-485
-486
-487
-488
-489
-490
-491
-492</pre>
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 437</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 504</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_where_constructor'>where_constructor</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='comma'>,</span> <span class='id identifier rubyid_table'>table</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Array</span>
@@ -2880,7 +2928,11 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Fetches a entry based on the id (Alternative) Returns the object</p>
+<p>Fetches a entry based on the id (Alternative)</p>
+
+<p>id - (Integer, String, Symbol) ID of row to fetch table - (String, Symbol) Optional table to fetch from.</p>
+
+<p>Returns the object</p>
 
 
   </div>
@@ -2894,12 +2946,12 @@
       <pre class="lines">
 
 
-171
-172
-173</pre>
+229
+230
+231</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 171</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 229</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_with_id'>with_id</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_table'>table</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_fetch_by_id'>fetch_by_id</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_table'>table</span><span class='rparen'>)</span>
@@ -2927,7 +2979,11 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns id</p>
+<p>Executes given sql query like SQLite3 gem</p>
+
+<p>sql - Sql Query (String) values - Array containing a list of values (optional)</p>
+
+<p>Returns id or sqlresult as hash</p>
 
 
   </div>
@@ -2941,36 +2997,36 @@
       <pre class="lines">
 
 
-693
-694
-695
-696
-697
-698
-699
-700
-701
-702
-703
-704
-705
-706
-707
-708
-709
-710
-711
-712
-713
-714
-715
-716
-717
-718
-719</pre>
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 693</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 786</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='id identifier rubyid_sql'>sql</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_values'>values</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_p'>p</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>__________________________</span><span class='tstring_end'>&#39;</span></span>
@@ -3034,13 +3090,13 @@
       <pre class="lines">
 
 
-259
-260
-261
-262</pre>
+317
+318
+319
+320</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 259</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 317</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_insert'>insert</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_table'>table</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_table'>table</span> <span class='op'>=</span> <span class='ivar'>@table</span> <span class='kw'>if</span> <span class='id identifier rubyid_table'>table</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -3079,12 +3135,6 @@
       <pre class="lines">
 
 
-40
-41
-42
-43
-44
-45
 46
 47
 48
@@ -3093,10 +3143,16 @@
 51
 52
 53
-54</pre>
+54
+55
+56
+57
+58
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_save'>save</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_instance_variables'>instance_variables</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='symbol'>:@id</span> <span class='comment'># Update
@@ -3148,12 +3204,6 @@
       <pre class="lines">
 
 
-62
-63
-64
-65
-66
-67
 68
 69
 70
@@ -3166,10 +3216,16 @@
 77
 78
 79
-80</pre>
+80
+81
+82
+83
+84
+85
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 68</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_update'>update</span><span class='lparen'>(</span><span class='id identifier rubyid_object'>object</span><span class='comma'>,</span> <span class='id identifier rubyid_table'>table</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_variables'>variables</span> <span class='op'>=</span> <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_instance_variables'>instance_variables</span>
@@ -3200,9 +3256,9 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Jan 16 10:11:19 2020 by
+  Generated on Wed Jan 22 16:02:16 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.24 (ruby-2.6.3).
+  0.9.24 (ruby-2.6.5).
 </div>
 
     </div>
