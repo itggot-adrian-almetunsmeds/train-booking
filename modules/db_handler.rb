@@ -3,6 +3,12 @@
 require 'sqlite3'
 
 # Creates a new class dynamically.
+#
+# new_class - New class name (String)
+# parent - Eventual parent to inherit from (String)
+# fields - Optional, Hash of fields and values
+#
+# Returns nothing
 class ClassFactory
   def self.create_class(new_class, parent, *fields)
     c = Class.new(parent) do
@@ -84,6 +90,10 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # CONFIGURING / SET UP
 
   # Sets table
+  #
+  # string - (Symbol, String) of table
+  #
+  # Returns nothing
   def self.set_table(string)
     @table = string
   end
@@ -93,6 +103,10 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   end
 
   # Sets joins
+  #
+  # tables - (Hash, Sumbol, Array) Sets @tables based on input data
+  #
+  # Reuturns nothing
   def self.has_a(tables)
     if @tables.nil?
       @tables = [tables]
@@ -115,6 +129,10 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   end
 
   # Sets columns
+  #
+  # symbols - (Symbol, Hash, Array, String) of columns
+  #
+  # Returns nothing
   def self.set_columns(*symbols)
     symbols = symbols.flatten.map { |x| x = "#{@table}.#{x}" unless x.to_s.include?('.'); x }
     if @columns.nil?
@@ -131,6 +149,8 @@ class DBHandler # rubocop:disable Metrics/ClassLength
 
   # Connects to the database
   #
+  # path - (String) Optional path to db
+  #
   # If a db already excists then return it
   #
   # Returns a database objekt
@@ -143,12 +163,26 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   ######################
   # FETCHING/UPDATING/INSERTING/CREATING/DELETING
 
+  # Writes an object to db
+  #
+  # Returns nothing
+
+  # Updates a object using provided table
+  #
+  # object - Object to be updated
+  # table - DB table to update (String)
+  #
+  # Returns nothing
   # Fetches all entries given a table (Alternative)
+  #
+  # Returns returned object or Array of Objects
   def self.all
     fetch_all
   end
 
   # Fetches all entries given a table
+  #
+  # Returns returned object or Array of Objects
   def self.fetch_all
     sql_operator(
       table: @table,
@@ -157,7 +191,27 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     )
   end
 
+  # Removes an element from the database based on the id
+  #
+  # Returns nothing
+  # Deletes elements from the database where the condition applies
+  #
+  # args - Where areguments
+  #
+  # Returns nothing
+
+  # Deletes elements from the database where the condition applies
+  #
+  # args- WHere arguments
+  # table - Optional (String, Symbol) of table todelet from
+  #
+  # Returns nothing
+
   # Fetches a entry based on the id
+  #
+  # id - (Integer, String, Symbol) ID of row to fetch
+  # table - (String, Symbol) Optional table to fetch from.
+  #
   # Returns the object
   def self.fetch_by_id(id, table = nil)
     table = @table if table.nil?
@@ -167,6 +221,10 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   end
 
   # Fetches a entry based on the id (Alternative)
+  #
+  # id - (Integer, String, Symbol) ID of row to fetch
+  # table - (String, Symbol) Optional table to fetch from.
+  #
   # Returns the object
   def self.with_id(id, table = nil)
     fetch_by_id(id, table)
@@ -220,7 +278,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
 
   # Fetches where conditions are met
   #
-  # params - where params (Array - Hash, String)
+  # params - Where params (Array - Hash, String)
   #
   # Returns objects containing the given sql response
   def self.fetch_where(params)
@@ -262,6 +320,9 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   end
 
   # Decides if the provided argument has to be processed before execution
+  #
+  # args - Custom arguments to pass to the method
+  #
   # Public for use in special sql queries
   def self.sql_operator(*args)
     sql_operator!(args)
@@ -296,8 +357,8 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # Objectifies entered data. Either initializing a new object instance with the
   # given data or updates a excisting instance
   #
-  # array - Array or Array containing a Hash containing data
-  # class_holder - "Origin" instance
+  # array - Array of Hashes or Array containing a Hash containing data
+  # class_holder - "Origin" instance (Object)
   #
   # Returns nothing
   def self.object_constructor(array, class_holder)
@@ -408,6 +469,9 @@ class DBHandler # rubocop:disable Metrics/ClassLength
 
   # Constructs selects
   #
+  # value - (String, Array, Symbol) Select columns
+  # table - (String, Symbol) Select from table
+  #
   # Returns selects as SQL - Query (Partial string)
   def self.select_constructor(value, table)
     selects = 'SELECT'
@@ -432,6 +496,9 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   end
 
   # Constructs wheres
+  #
+  # value - (Array, Hash, String) SQL where params/ params as hash
+  # table - (String, Key/Symbol) Table for where the condition applies
   #
   # Reutrns a Array containing wheres as SQL - Query (Partial String), and associated values
   def self.where_constructor(value, table)
@@ -493,6 +560,10 @@ class DBHandler # rubocop:disable Metrics/ClassLength
 
   # Consstructs joins
   #
+  # joins - Tables to join (Array, Hash, String, Key)
+  # talbe - Table to join on (Key, String)
+  # type - (String, Key) Optional type of join param
+  #
   # Returns joins as SQL - query (Partial String)
   def self.join_constructor(joins, table, type = 'LEFT')
     sql_join = ''
@@ -552,6 +623,8 @@ class DBHandler # rubocop:disable Metrics/ClassLength
 
   # Constructs order
   #
+  # value - (Hash) Hash containing table and or order
+  #
   # Returns order as SQL - Query (Partial String)
   def self.order_constructor(value)
     raise 'Option Limit is not a hash.' unless value.is_a? Hash
@@ -570,6 +643,11 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   ######################
   # GENERAL "PRIVATE" METHODS
 
+  # Checks if a class is defined
+  #
+  # class_name - (String) Class name. Case sensetive
+  #
+  # Returns true or false
   def self.class_exists?(class_name)
     klass = Module.const_get(class_name)
     klass.is_a?(Class)
@@ -577,7 +655,14 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     false
   end
 
+  # Constructs the additional joines from joined in tables.
+  #
+  # tables - Join hash/array/string/key
+  #
+  # Returns the additional joins from a given class (String)
   # Acts as manager for construction of SQL queries
+  #
+  # args - (Hash) Hash of 'arguments' to be constructed and then executed
   #
   # Returns a list of lists containing objects representing databases entries
   def self.sql_operator!(args)
@@ -619,7 +704,10 @@ class DBHandler # rubocop:disable Metrics/ClassLength
 
   # Insert method
   #
-  # Reuturns id
+  # data -(Hash) containing data to insert
+  # table - (String/Key) database table to insert into
+  #
+  # Reuturns the new id
   private def insert!(data, table)
     if !data.is_a? Hash
       write_to_db(data, table)
@@ -669,9 +757,9 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     execute("INSERT INTO #{table} (#{k}) VALUES (#{x})", q)
   end
 
-  # Executes given sql code like SQLite3 gem
+  # Executes given sql query like SQLite3 gem
   #
-  # sql - String (SQL code)
+  # sql - String (SQL query)
   # values - Array containing a list of values (optional)
   #
   # Returns sqlresult as hash
@@ -689,7 +777,12 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     end
   end
 
-  # Returns id
+  # Executes given sql query like SQLite3 gem
+  #
+  # sql - Sql Query (String)
+  # values - Array containing a list of values (optional)
+  #
+  # Returns id or sqlresult as hash
   def execute(sql, *values)
     p '__________________________'
     p sql
