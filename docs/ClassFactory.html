@@ -102,11 +102,7 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>Creates a new class dynamically.</p>
-
-<p>new_class - New class name (String) parent - Eventual parent to inherit from (String) fields - Optional, Hash of fields and values</p>
-
-<p>Returns nothing</p>
+<p>Handles the ClassFactory</p>
 
 
   </div>
@@ -146,7 +142,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a new class dynamically.</p>
+</div></span>
   
 </li>
 
@@ -169,13 +167,27 @@
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates a new class dynamically.</p>
+
+<p>new_class - New class name (String) parent - Eventual parent to inherit from (String) fields - Optional, Hash of fields and values</p>
+
+<p>Returns nothing</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-13
 14
 15
 16
@@ -188,10 +200,11 @@
 23
 24
 25
-26</pre>
+26
+27</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'modules/db_handler.rb', line 14</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_create_class'>create_class</span><span class='lparen'>(</span><span class='id identifier rubyid_new_class'>new_class</span><span class='comma'>,</span> <span class='id identifier rubyid_parent'>parent</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_fields'>fields</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_c'>c</span> <span class='op'>=</span> <span class='const'>Class</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_parent'>parent</span><span class='rparen'>)</span> <span class='kw'>do</span>
@@ -217,7 +230,7 @@
 </div>
 
       <div id="footer">
-  Generated on Wed Jan 22 16:02:15 2020 by
+  Generated on Thu Jan 23 09:56:55 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.24 (ruby-2.6.5).
 </div>
