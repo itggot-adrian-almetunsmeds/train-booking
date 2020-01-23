@@ -65,7 +65,7 @@ class Seeder
     db.execute <<-SQL
             CREATE TABLE "train" (
                 "id"      INTEGER PRIMARY KEY AUTOINCREMENT,
-                "type_id" INTEGER NOT NULL,
+                "train_type_id" INTEGER NOT NULL,
                 "status"  TEXT NOT NULL DEFAULT "operational",
                 "main_location"  TEXT NOT NULL DEFAULT "Göteborg C"
             );
@@ -205,10 +205,10 @@ class Seeder
     ]
 
     services = [
-      {train_id: '1', name: 'Express', departure_id: 1, departure_time: DateTime.now.to_time.to_i, arrival_id: 2, arrival_time: (DateTime.now + 1).to_time.to_i, empty_seats: 120},
-      {train_id: '2', name: 'Snabb', departure_id: 1, departure_time: (DateTime.now+2).to_time.to_i, arrival_id: 2, arrival_time: (DateTime.now + 3).to_time.to_i, empty_seats: 120},
-      {train_id: '2', name: 'Snabbare', departure_id: 1, departure_time: (DateTime.now + 1).to_time.to_i, arrival_id: 3, arrival_time: (DateTime.now + 2).to_time.to_i, empty_seats: 120},
-      {train_id: '2', name: 'Snabb Express delux', departure_id: 1, departure_time: DateTime.now.to_time.to_i, arrival_id: 2, arrival_time: (DateTime.now + 2).to_time.to_i, empty_seats: 120}
+      {train_id: '1', name: 'Express', departure_id: 1, departure_time: DateTime.now.to_time.to_i, arrival_id: 6, arrival_time: (DateTime.now + 1).to_time.to_i, empty_seats: 30},
+      {train_id: '2', name: 'Snabb', departure_id: 1, departure_time: (DateTime.now+2).to_time.to_i, arrival_id: 7, arrival_time: (DateTime.now + 3).to_time.to_i, empty_seats: 23},
+      {train_id: '2', name: 'Snabbare', departure_id: 1, departure_time: (DateTime.now + 1).to_time.to_i, arrival_id: 6, arrival_time: (DateTime.now + 2).to_time.to_i, empty_seats: 23},
+      {train_id: '2', name: 'Snabb Express delux', departure_id: 1, departure_time: DateTime.now.to_time.to_i, arrival_id: 7, arrival_time: (DateTime.now + 2).to_time.to_i, empty_seats: 44}
     ]
 
     seats = [
@@ -331,29 +331,32 @@ class Seeder
     ]
 
     trains = [
-      {type_id: 1},
-      {type_id: 2},
-      {type_id: 2},
-      {type_id: 1},
-      {type_id: 3},
-      {type_id: 2},
-      {type_id: 2},
-      {type_id: 1},
-      {type_id: 2},
-      {type_id: 4},
-      {type_id: 4},
-      {type_id: 4},
-      {type_id: 2}
-    ]
-    
-    users = [
-      {first_name: 'Jakob', last_name: 'Petterson', password: BCrypt::Password.create('tetris'), email: 'jakob@ntig.se'},
-      {first_name: 'Adrian', last_name: 'Anderson', password: BCrypt::Password.create('tetris'), email: 'adrian@ntig.se'},
-      {first_name: 'Carl', last_name: 'Rytger', password: BCrypt::Password.create('tetris'), email: 'carl@ntig.se'},
-      {first_name: 'David', last_name: 'Fredriksson', password: BCrypt::Password.create('tetris'), email: 'david@ntig.se'},
-      {first_name: 'Admin', last_name: 'Administrator', password: BCrypt::Password.create('admin'), email: 'admin@admin'}
+      {train_type_id: 1},
+      {train_type_id: 2},
+      {train_type_id: 2},
+      {train_type_id: 1},
+      {train_type_id: 3},
+      {train_type_id: 2},
+      {train_type_id: 2},
+      {train_type_id: 1},
+      {train_type_id: 2},
+      {train_type_id: 4},
+      {train_type_id: 4},
+      {train_type_id: 4},
+      {train_type_id: 2}
     ]
 
+    users = [
+      {first_name: 'Jakob', last_name: 'Petterson', password: BCrypt::Password.create('tetris'), email: 'jakob@exampel.se'},
+      {first_name: 'Adrian', last_name: 'Anderson', password: BCrypt::Password.create('tetris'), email: 'adrian@example.se'},
+      {first_name: 'Carl', last_name: 'Rytger', password: BCrypt::Password.create('tetris'), email: 'carl@example.se'},
+      {first_name: 'David', last_name: 'Fredriksson', password: BCrypt::Password.create('tetris'), email: 'david@example.se'},
+    ]
+    user_admin = [ {first_name: 'Admin', last_name: 'Administrator', password: BCrypt::Password.create('admin'), email: 'admin@admin', admin: 1} ]
+
+    user_admin.each do |d|
+      db.execute('INSERT INTO user (first_name, last_name, password, email, admin) VALUES (?,?,?,?,?)', d[:first_name], d[:last_name], d[:password], d[:email], d[:admin])
+    end
     users.each do |d|
       db.execute('INSERT INTO user (first_name, last_name, password, email) VALUES (?,?,?,?)', d[:first_name], d[:last_name], d[:password], d[:email])
     end
@@ -363,7 +366,7 @@ class Seeder
     end
 
     trains.each do |d|
-      db.execute('INSERT INTO train (type_id) VALUES (?)', d[:type_id])
+      db.execute('INSERT INTO train (train_type_id) VALUES (?)', d[:train_type_id])
     end
 
     connector.each do |d|
