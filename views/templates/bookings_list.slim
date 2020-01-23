@@ -1,0 +1,16 @@
+- if @bookings.flatten.length != 0
+  - @bookings.flatten.each do |booking|
+    a href="/booking/#{booking.id}/delete"
+      div style="border: 1px solid black;"
+        h4 Booking User ID #{booking.user_id}
+        h4 Booking ID #{booking.id}
+        h4 Ticket: #{booking.ticket.name}
+        h4 #{booking.dep.name} - #{booking.arr.name}
+        - if booking.status == 0
+          h4 Booking Status. Not completed
+        - elsif booking.status == 1
+          h4 Booking Status. Completed
+        - else
+          h4 Booking Status. Unknown
+- else
+  p No bookings found

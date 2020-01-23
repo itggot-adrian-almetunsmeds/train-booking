@@ -1,33 +1,72 @@
-- @booking.tickets.each do |ticket|
-  .ticket
-    h3 #{@booking.departure_location} - #{@booking.arrival_location} #{ticket.name}
+- if @booking.is_a? Array
+  - @booking.each do |booking|
+    .ticket
+    h3 #{booking.dep.name} - #{booking.arr.name} #{booking.ticket.name}
     .holder style="display: flex;"
       .table
         table
           th Departure
           tr
-            td= @booking.departure_time
+            td= DateTime.strptime(booking.service.departure_time,'%s')
           tr
-            td= 'Platform ' + @booking.departure_platform
+            td= 'Platform ' + booking.dep_plattform.name
       .table
         table
           th Arrival
           tr
-            td= @booking.arrival_time
+            td= DateTime.strptime(booking.service.arrival_time,'%s')
           tr
-            td= 'Platform ' + @booking.arrival_platform
+            td= 'Platform ' + booking.arr_plattform.name
       .table
         table
-          th Seat
+          th Seats
           tr
-            - if ticket.seat_id.is_a? Array
-              - seat = ''
-              - ticket.seat_id.each_with_index do |seat_value, index|
-                - if index == 0
-                  - seat = "#{seat_value}"
+          - if @seats.is_a? Array
+            - seat = ''; i = 0
+            - @seats.each do |seats|
+              - if seats.ticket_id == booking.booking_connector.ticket_id
+                - if i == 0
+                  - seat = "#{seats.seat_id}"
                 - else
-                  - seat = "#{seat}, #{seat_value}"
+                  - seat = "#{seat}, #{seats.seat_id}"
+                - i += 1
+            td= seat
+          - else
+            td= @seats.seat_id
+- else
+
+  .ticket
+    h3 #{@booking.dep.name} - #{@booking.arr.name} #{@booking.ticket.name}
+    .holder style="display: flex;"
+      .table
+        table
+          th Departure
+          tr
+            td= DateTime.strptime(@booking.service.departure_time,'%s')
+          tr
+            td= 'Platform ' + @booking.dep_plattform.name
+      .table
+        table
+          th Arrival
+          tr
+            td= DateTime.strptime(@booking.service.arrival_time,'%s')
+          tr
+            td= 'Platform ' + @booking.arr_plattform.name
+      .table
+        table
+          - if @seats.is_a? Array
+            th Seats
+          - else
+            th Seat
+          tr
+            - if @seats.is_a? Array
+              - seat = ''; i = 0
+              - @seats.each do |sea|
+                - if i == 0
+                  - seat = "#{sea.seat_id}"
+                - else
+                  - seat = "#{seat}, #{sea.seat_id}"
+                - i += 1
               td= seat
             - else
-              td= ticket.seat_id
-            
+              td= @seats.seat_id

@@ -1,0 +1,12 @@
+- @users.flatten.each do |user|
+  div style="border: 1px solid black;"
+    form action="/user/#{user.id}/update" method="post"
+      input type="text" name="first_name" value="#{user.first_name}" placeholder="First Name"/
+      input type="text" name="last_name" value="#{user.last_name}" palceholder="Last Name"/
+      input type="text" name="email" value="#{user.email}" placeholder="Email"/
+      input type="number" name="points" value="#{user.points}" palceholder="Points"/
+      - if @user.id == user.id
+        input type="password" name="password" placeholder="New password"/
+      button type="submit" Update
+    a href="/user/#{user.id}/delete"
+      button Delete

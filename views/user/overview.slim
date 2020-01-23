@@ -1,0 +1,50 @@
+h3= "#{@user.first_name} #{@user.last_name} Dashboard"
+p Member points: #{@user.points}
+a href="/user/#{@user.id}/edit" Update user information
+
+- if @bookings.is_a? Array
+  h4 Bookings
+  - @bookings.each do |booking|
+      a.ticket href="/booking/#{booking.id}/delete"
+        div style="border: 1px solid grey;"
+          p Cancel booking
+      h3 #{booking.dep.name} - #{booking.arr.name} #{booking.ticket.name}
+      .holder style="display: flex;"
+        .table
+          table
+            th Departure
+            tr
+              td= DateTime.strptime(booking.service.departure_time,'%s')
+            tr
+              td= 'Platform ' + booking.dep_plattform.name
+        .table
+          table
+            th Arrival
+            tr
+              td= DateTime.strptime(booking.service.arrival_time,'%s')
+            tr
+              td= 'Platform ' + booking.arr_plattform.name
+
+- elsif !@bookings.nil?
+  h4 Bookings
+    a.ticket href="/booking/#{booking.id}/delete"
+      div style="border: 1px solid grey;"
+        p Cancel booking
+    h3 #{@bookings.dep.name} - #{@bookings.arr.name} #{@bookings.ticket.name}
+    .holder style="display: flex;"
+      .table
+        table
+          th Departure
+          tr
+            td= DateTime.strptime(@bookings.service.departure_time,'%s')
+          tr
+            td= 'Platform ' + @bookings.dep_plattform.name
+      .table
+        table
+          th Arrival
+          tr
+            td= DateTime.strptime(@bookings.service.arrival_time,'%s')
+          tr
+            td= 'Platform ' + @bookings.arr_plattform.name
+- else
+  h4 Found no bookings

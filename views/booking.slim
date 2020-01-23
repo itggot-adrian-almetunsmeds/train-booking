@@ -11,10 +11,10 @@ table
             p= @service.arrival_time
 
 - @tickets.each do |z|
-    p Ticket type: #{z.name}
-    p #{z.price} SEK
-    p Potential points: #{z.points}
-    input type="text" class="spinner" value="0" name="ticket#{z.id}"
+    p Ticket type: #{z.ticket.name}
+    p #{z.ticket.price} SEK
+    p Potential points: #{z.ticket.points}
+    input type="text" class="spinner" value="0" name="ticket#{z.ticket.id}"
 br
 br
 button#submitticket type="submit" Continue

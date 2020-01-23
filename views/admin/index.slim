@@ -1,2 +1,27 @@
 h1 Admin configuration
-    
+
+p Click booking to cancel
+== slim :'templates/bookings_list'
+br
+br
+
+== slim :'templates/services_list'
+
+h3 New service
+form action="/service/create" method="post"
+  p Name
+  input type="text" name="name"/
+  p Train ID
+  input type="number" name="train_id"/
+  p Departure ID
+  input type="number" name="departure_id"/
+  p Arrival ID
+  input type="number" name="arrival_id"/
+  p Departure time
+  input type="datetime-local" name="departure_time"/    
+  p Arrival time
+  input type="datetime-local" name="arrival_time"/
+  button type="submit" Create
+
+== slim :'templates/user_list'
+

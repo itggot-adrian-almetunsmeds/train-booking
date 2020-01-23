@@ -1,0 +1,16 @@
+- @services.flatten.each do |service|
+  form action="/service/#{service.id}/update" method="post"
+    h4 #{service.id}  - #{service.name}
+    p Name
+    input type="text" name="name" value="#{service.name}"/
+    p Train ID
+    input type="text" name="train_id" value="#{service.train_id}"/
+    p Departure ID
+    input type="number" name="departure_id" value="#{service.departure_id}"/
+    p Arrival ID
+    input type="number" name="arrival_id" value="#{service.arrival_id}"/
+    p Departure time
+    input type="datetime-local" name="departure_time" value="#{DateTime.strptime(service.departure_time,'%s').to_s[0..15]}"/    
+    p Arrival time
+    input type="datetime-local" name="arrival_time" value="#{DateTime.strptime(service.arrival_time,'%s').to_s[0..15]}"/
+    button type="submit" Update

@@ -1,0 +1,16 @@
+.table
+  table
+    th Seats
+    tr
+    - if @seats.is_a? Array
+      - seat = ''; i = 0
+      - @seats.each do |seats|
+        - if seats.ticket_id == booking.booking_connector.ticket_id
+          - if i == 0
+            - seat = "#{seats.seat_id}"
+          - else
+            - seat = "#{seat}, #{seats.seat_id}"
+          - i += 1
+      td= seat
+    - else
+      td= @seats.seat_id

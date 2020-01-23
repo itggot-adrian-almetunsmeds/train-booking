@@ -20,6 +20,8 @@ html lang="en"
                     h4 Admin
             div#login onclick="toggleNav()"
                 - if @signed_in
+                    a href="/user/#{@user.id}"
+                        p= "#{@user.first_name}"
                     form action="/logout" method="post"
                         button type="submit"Sign Out
                 - else
@@ -28,13 +30,14 @@ html lang="en"
     - if @error
       div#errors
         p= @error
-    div#login_form
-        form.signin action="/login" method="post"
-            input type="text" name="email" placeholder="Email Adress"/
-            input type="password" name="password" placeholder="Password"/
-            button type="submit"Sign In
-        a.signin href="/register"
-            h5 Register
+    - unless @signed_in
+        div#login_form
+            form.signin action="/login" method="post"
+                input type="text" name="email" placeholder="Email Adress"/
+                input type="password" name="password" placeholder="Password"/
+                button type="submit"Sign In
+            a.signin href="/register"
+                h5 Register
     == yield
     
     script src="/js/main.js"

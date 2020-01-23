@@ -1,22 +1,53 @@
-div#dep.data
-    h2 From #{@booking.departure_location} 
-    p Track: #{@booking.departure_platform}
-    h4 Departure time: #{@booking.departure_time}
+- if @booking.is_a? Array
+    div#dep.data
+        h2 From #{@booking.first.dep.name} 
+        p Track: #{@booking.first.dep_plattform.name}
+        h4 Departure time: #{@booking.first.service.departure_time}
 
-div#arr.data
-    h2 To #{@booking.arrival_location}
-    p Track: #{@booking.arrival_platform}
-    h4 Arrival time: #{@booking.arrival_time}
+    div#arr.data
+        h2 To #{@booking.first.arr.name}
+        p Track: #{@booking.first.arr_plattform.name}
+        h4 Arrival time: #{@booking.first.service.arrival_time}
+    
+    - @booking.each do |tick|
+        - @ticket = tick.ticket
+        - @amount = tick.booking_connector.amount
+        - if @amount.to_i != 0
+            == slim :'templates/ticket'
 
-- @booking.tickets.each do |ticket, index|
-    - @ticket = ticket
-    - if @ticket.amount != 0
-        == slim :'templates/ticket'
+    div#complete
+        h2 Total: #{@booking.first.price} SEK
+        h4 Points gained as a signed in user #{@total_points}
 
-div#complete 
-    h2 Total: #{@booking.total_price} SEK
-    h4 Points gained as a signed in user #{@booking.total_points}
+    form action="/confirmticket" method="post"
+        input type="hidden" name="confirm" value="true"/
+        button type="submit" Confirm
+- else
+    div#dep.data
+        h2 From #{@booking.dep.name} 
+        p Track: #{@booking.dep_plattform.name}
+        h4 Departure time: #{@booking.service.departure_time}
 
-form action="/confirmticket" method="post"
-    input type="hidden" name="confirm" value="true"/
-    button type="submit" Confirm
+    div#arr.data
+        h2 To #{@booking.arr.name}
+        p Track: #{@booking.arr_plattform.name}
+        h4 Arrival time: #{@booking.service.arrival_time}
+
+    - if @booking.ticket.is_a? Array
+        - @booking.ticket.each do |ticket, index|
+            - @ticket = ticket
+            - if @ticket.amount != 0
+                == slim :'templates/ticket'
+    - else
+        - @ticket = @booking.ticket
+        - @amount = @booking.booking_connector.amount
+        - if @amount != 0
+            == slim :'templates/ticket'
+
+    div#complete
+        h2 Total: #{@booking.price} SEK
+        h4 Points gained as a signed in user #{@total_points}
+
+    form action="/confirmticket" method="post"
+        input type="hidden" name="confirm" value="true"/
+        button type="submit" Confirm
