@@ -6,22 +6,33 @@ require_relative 'db_handler'
 class Service < DBHandler
   set_table :service
   set_columns :id, :train_id, :name, :departure_id, :departure_time,
-              :arrival_id, :arrival_time, :empty_seats, 'dep.name', 'arr.name'
-  has_a ['destination AS dep ON dep.id = service.departure_id',
-         'destination AS arr ON arr.id = service.arrival_id']
-  # has_a ticket_connector: :ticket
+              :arrival_id, :arrival_time, :empty_seats, :'dep.name', :'arr.name',
+              :'arr_plattform.name', :'dep_plattform.name'
+
+  has_a ['platform as arr_plattform on service.arrival_id = arr_plattform.id',
+         'platform as dep_plattform on service.departure_id = dep_plattform.id',
+         'destination AS dep ON dep.id = dep_plattform.destination_id',
+         'destination AS arr ON arr.id = arr_plattform.destination_id',
+         :train]
 
   def tickets(id = nil)
-    p self.id
     if id.nil?
-      p Ticket.fetch_where service_id: self.id
+      Ticket.fetch_where service_id: self.id
     else
-      p Ticket.fetch_where 'ticket.id': id
+      Ticket.fetch_where 'ticket.id': id
     end
   end
 
   def self.update_empty_seats(id)
-    execute 'UPDATE services SET empty_seats = (SELECT COUNT(occupied) FROM seats WHERE service_id = ? AND occupied = 0) WHERE id = ?', id, id
+    service = Service.fetch_where id: id
+    temp = Seat.fetch_where service_id: id, occupied: 0
+    amount = if temp.is_a? Array
+               temp.length
+             else
+               1
+             end
+    service.empty_seats = amount
+    service.save
   end
 
   def self.search(params)
@@ -29,18 +40,14 @@ class Service < DBHandler
     params['arr'] = '%' + params['arr'] + '%'
     params['time'] = DateTime.parse(params['time']).to_time.to_i
     x = fetch_where ["dep.name LIKE #{params['dep']}", "arr.name LIKE #{params['arr']}",
-                     "departure_time > #{params['time']}"]
+                     "departure_time > #{params['time']}", 'empty_seats != 0']
 
     if x == []
-      'No available services'
+      return 'No available services'
+    elsif x.is_a? Array
+      return x.flatten
     else
-      p x
-      x.flatten if x.is_a? Array
+      return x
     end
   end
-
-  # def self.tickets(id)
-  #   DBHandler.execute('SELECT * FROM connector JOIN tickets ON tickets.id = connector.ticket_id ' \
-  #     'WHERE connector.service_id = ?', id)
-  # end
 end
