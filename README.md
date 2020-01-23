@@ -11,7 +11,7 @@ A digital platform where customers can book train tickets.
 #### Non registered users
 * Can <i>book trips</i> between two locations on a specific <i>service</i>
 * Have the ability to book <i>multiple seats</i> on a single train
-* Have the ability to <i>prefer specific seats</i> during booking
+* Might have the ability to <i>prefer specific seats</i> during booking
 * Users can choose between <i>multiple tickets</i>. Tickets with different prices / points
 * Can <i>register an account</i>
 
@@ -22,7 +22,7 @@ A digital platform where customers can book train tickets.
 
 #### Administrators
 * Administrators have the ability to <i>change points</i> of users and <i>cancel user bookings</i>
-* See all bookings made to a specific service
+* Add/Edit <i>services</i>
 
 ### Description of entities
 

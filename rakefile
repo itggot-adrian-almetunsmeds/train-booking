@@ -5,9 +5,40 @@ RSpec::Core::RakeTask.new(:spec)
 
 task :default => :test
 
-task :test => :spec
 
 task :seed do
   require_relative 'db/seeder.rb'
   Seeder.seed!
 end
+
+task :test do
+  Rake::Task['acceptance'].invoke
+
+  Rake::Task['unit'].invoke
+end
+
+task :acceptance do
+  tests =  get_tests_sorted('./spec/acceptance/*_spec.rb')
+  tests.each do |test|
+    Rake::Task['seed'].invoke #reset db before each test file is run
+    system("bundle exec 'ruby #{test}'")
+  end
+end
+
+task :unit => :spec
+
+
+
+def get_tests_sorted(test_folder_path)
+  tests = Dir.glob(test_folder_path).sort_by do |a|
+    basename = File.basename(a)
+    splitted = basename.split("_")
+    splitted.first.to_i
+  end
+  return tests
+end
+
+# task :tester do
+  
+#   :spec
+# end

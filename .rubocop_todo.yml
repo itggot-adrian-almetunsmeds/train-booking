@@ -7,10 +7,6 @@
 # versions of RuboCop, may require this file to be generated again.
 
 
-# Offense count: 1
-Lint/ShadowingOuterLocalVariable:
-  Exclude:
-    - 'modules/db_handler.rb'
 
 # Offense count: 6
 Metrics/AbcSize:
@@ -36,13 +32,6 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Max: 16
 
-# Offense count: 19
-# Cop supports --auto-correct.
-# Configuration parameters: AutoCorrect, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
-# URISchemes: http, https
-Metrics/LineLength:
-  Max: 110
-
 # Offense count: 11
 # Configuration parameters: CountComments, ExcludedMethods.
 Metrics/MethodLength:
@@ -63,22 +52,11 @@ Naming/PredicateName:
     - 'spec/**/*'
     - 'modules/db_handler.rb'
 
-# Offense count: 8
-# Configuration parameters: .
-# SupportedStyles: inline, group
-Style/AccessModifierDeclarations:
-  EnforcedStyle: inline
-
 # Offense count: 2
 Style/Documentation:
   Exclude:
     - 'spec/**/*'
     - 'test/**/*'
-
-# Offense count: 1
-Style/DoubleNegation:
-  Exclude:
-    - 'modules/db_handler.rb'
 
 # Offense count: 8
 # Cop supports --auto-correct.
