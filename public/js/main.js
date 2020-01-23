@@ -25,8 +25,6 @@ function sendTicket() {
 if ((window.location.href).includes('service')) {
     document.getElementById('submitticket').addEventListener('click', function () {
         console.log('Button pressed')
-        // const data = await fetch("http://localhost:9292/ticket", {method: "post", body: JSON.stringify(sendTicket())})          
-        // TODO: Research fetch for JavaScript
 
         const request = new XMLHttpRequest();
         const url = (window.location.protocol + "//" + window.location.hostname + ':9292');

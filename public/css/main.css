@@ -24,6 +24,13 @@ nav {
     cursor: pointer;
 }
 
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 #login>i {
     font-size: 1.3rem;
 }
