@@ -7,123 +7,128 @@ require_relative 'seats'
 # Handles all bookings
 class Booking < DBHandler
   set_table :booking
-  has_a [:service,
-         # {alias: 'dep', table: }
-         'platforms AS dep ON service.departure_id = dep.id',
-         'platforms AS arr ON service.arrival_id = arr.id',
-         'destination as arrival ON arr.destination_id = arrival.id',
-         'destinations as departure ON dep.destination_id = departure.id',
-         booking_connector: :tickets]
+  set_columns :id, :user_id, :price, :service_id, :booking_time, :status, :session_id
+  has_a [:service, booking_connector: :ticket]
 
-  set_columns :id, :status, :session_id, :user_id, :'departure.name', :'arrival.name',
-              :arrival_time, :departure_time, :points, :amount, :'tickets.id',
-              :price, :service_id
+  # Cancels booking
+  #
+  # id - Booking id (Integer)
+  # session - session Object
+  # params - params Object
+  #
+  # Returns redirect url
+  def self.cancel(_id, session, params)
+    @bookings = Booking.fetch_where id: params[:id]
+    return '/' if @bookings == []
 
-  # attr_reader :user_id, :departure_location, :departure_platform, :arrival_location, :arrival_platform,
-  #             :ticket_name, :total_price, :departure_time, :arrival_time, :total_points, :tickets,
-  #             :booking_id, :status, :session_id, :id
+    temp = if @bookings.is_a? Array
+             @bookings.first
+           else
+             @bookings
+           end
 
-  # attr_writer :total_price, :status, :session_id, :user_id
-  # def initialize(id)
-  #   if id.is_a? String
-  #     data = DBHandler.execute(
-  #       'SELECT bookings.id, bookings.status, bookings.session_id, bookings.id, user_id,' \
-  #       ' departure.name AS departure_location, arrival.name AS arrival_location,'\
-  #       ' dep.name AS departure_platform, arr.name AS arrival_platform, tickets.name AS ticket_name,'\
-  #       ' arrival_time, departure_time, points, amount, tickets.id AS ticket_id,'\
-  #       ' bookings.price as booking_price, bookings.service_id'\
-  #       ' FROM bookings'\
-  #       ' LEFT JOIN booking_connector'\
-  #       ' ON bookings.id = booking_connector.booking_id'\
-  #       ' LEFT JOIN tickets'\
-  #       ' ON booking_connector.ticket_id = tickets.id'\
-  #       ' LEFT JOIN services'\
-  #       ' ON bookings.service_id = services.id'\
-  #       ' LEFT JOIN platforms AS dep'\
-  #       ' ON services.departure_id = dep.id'\
-  #       ' LEFT JOIN platforms AS arr'\
-  #       ' ON services.arrival_id = arr.id'\
-  #       ' LEFT JOIN destinations as arrival'\
-  #       ' ON arr.destination_id = arrival.id'\
-  #       ' LEFT JOIN destinations as departure'\
-  #       ' ON dep.destination_id = departure.id'\
-  #       ' WHERE session_id = ?', id
-  #     )
-  #   else
-  #     data = DBHandler.execute(
-  #       'SELECT bookings.id, bookings.status, bookings.session_id, bookings.id, user_id,' \
-  #       ' departure.name AS departure_location, arrival.name AS arrival_location,'\
-  #       ' dep.name AS departure_platform, arr.name AS arrival_platform, tickets.name AS ticket_name,'\
-  #       ' arrival_time, departure_time, points, amount, tickets.id AS ticket_id,'\
-  #       ' bookings.price as booking_price, bookings.service_id'\
-  #       ' FROM bookings'\
-  #       ' LEFT JOIN booking_connector'\
-  #       ' ON bookings.id = booking_connector.booking_id'\
-  #       ' LEFT JOIN tickets'\
-  #       ' ON booking_connector.ticket_id = tickets.id'\
-  #       ' LEFT JOIN services'\
-  #       ' ON bookings.service_id = services.id'\
-  #       ' LEFT JOIN platforms AS dep'\
-  #       ' ON services.departure_id = dep.id'\
-  #       ' LEFT JOIN platforms AS arr'\
-  #       ' ON services.arrival_id = arr.id'\
-  #       ' LEFT JOIN destinations as arrival'\
-  #       ' ON arr.destination_id = arrival.id'\
-  #       ' LEFT JOIN destinations as departure'\
-  #       ' ON dep.destination_id = departure.id'\
-  #       ' WHERE bookings.id = ?', id
-  #     )
-  # end
-  #   @tickets = []
-  #   @total_points = 0
-  #   data.each do |z|
-  #     next if z['amount'] == 0
+    if session[:user_id] == temp.user_id || @admin
+      @seats = Seat_connector.fetch_where booking_id: params[:id]
 
-  #     ticket = Ticket.new(z['ticket_id'], z['amount'])
-  #     seat = Seat.booked_seats_ticket z['id'], z['ticket_id']
-  #     ticket = Objects.merge(seat, ticket)
+      # Resets all associated seats
+      if @seats.is_a? Array
+        @seats.each do |seat|
+          x = Seat.fetch_where(id: seat.seat_id)
+          if x.is_a? Array
+            x.each do |z|
+              z.occupied = 0
+              z.booking_id = 0
+              z.save
+            end
+          else
+            x.occupied = 0
+            x.booking_id = 0
+            x.save
+          end
+        end
+      else
+        x = Seat.fetch_where(id: @seats.seat_id)
+        if x.is_a? Array
+          x.each do |z|
+            z.occupied = 0
+            z.booking_id = 0
+            z.save
+          end
+        else
+          x.occupied = 0
+          x.booking_id = 0
+          x.save
+        end
+      end
+      bookings = [BookingConnector.fetch_where(booking_id: params[:id])]
+      points = 0
+      bookings.flatten.each do |bok|
+        ticket = Ticket.fetch_by_id(bok.ticket_id)
+        points += bok.amount.to_i * ticket.price.to_i
+      end
 
-  #     ticket.instance_variables.each { |k| self.class.send(:attr_reader, k.to_s[1..-1].to_sym) }
-  #     tickets << ticket
-  #     @total_points += ticket.total_points
-  #   end
-  #   data = data.first
-  #   @total_price = data['booking_price']
-  #   @id = data['id']
-  #   @session_id = data['session_id']
-  #   @status = data['status']
-  #   @booking_id = data['id']
-  #   @user_id = data['user_id']
-  #   @departure_location = data['departure_location']
-  #   @departure_platform = data['departure_platform']
-  #   @arrival_location = data['arrival_location']
-  #   @arrival_platform = data['arrival_platform']
-  #   @departure_time = DateTime.strptime(data['departure_time'], '%s')
-  #   @arrival_time = DateTime.strptime(data['arrival_time'], '%s')
-  # end
+      u = User.fetch_where id: session[:user_id]
 
-  def confirm(booking, user_id = nil)
-    booking.status = 1
-    booking.session_id = nil
-    if user_id
-      booking.user_id = user_id
-      user = User.new(user_id)
-      user.points += total_points
-      user.save 'users'
+      u.points -= points
+
+      Seat_connector.delete_where booking_id: params[:id]
+
+      # Removes the booking
+      Booking.delete_where id: params[:id]
+
+      # Remove the rest of the booking connections
+      BookingConnector.delete_where booking_id: params[:id]
+
+      Service.update_empty_seats(temp.service_id)
+
+      # Redirect back to the user dashboard when complete
+      return back
+
+    else
+      p 'NON AUTHORIZED ACCESES'
+      # Unathorized
+      return '/'
     end
-    booking.save 'bookings', params: [{ key: 'status', value: booking.status },
-                                      { key: 'session_id', value: booking.session_id },
-                                      { key: 'user_id', value: booking.user_id }], id: booking.id
-    booking.id
   end
 
+  # Confirms the booking
+  #
+  # total_points - Total number of points for booking (Integer)
+  # user_id - User id (Integer) Optional
+  #
+  # Returns nothing
+  def confirm(total_points, user_id = nil)
+    self.status = 1
+    self.session_id = nil
+    unless user_id.nil?
+      user = User.fetch_where id: user_id
+      user.points = user.points.to_i + total_points.to_i
+      self.user_id = user_id
+
+      user.save
+    end
+    save
+  end
+
+  # Creates a new booking
+  #
+  # payload - Booking information (Hash)
+  # session - Session Obejct
+  # back - Back path
+  #
+  # Returns nothing
   def self.create(payload, session, _back)
+    Booking.delete_where session_id: session.id.public_id
+
     payload = JSON.parse(payload)['value']
     payload = JSON.parse(payload)
 
     stored = []
+    total_seats = 0
     payload.each do |ticket|
       next if ticket['amount'].to_i.zero?
+
+      total_seats += ticket['amount'].to_i
 
       temp = Ticket.fetch_where('ticket.id': ticket['id'], service_id: ticket['booking_id'])
       temp.instance_variable_set(:@amount, ticket['amount'])
@@ -131,59 +136,38 @@ class Booking < DBHandler
       stored << temp
     end
 
-    p stored
+    seats = Seat.fetch_where(service_id: stored.first.service_id, occupied: 0)
+    seats = if seats.is_a? Array
+              seats.length
+            elsif seats == []
+              0
+            else
+              1
+            end
+    raise 'No available seats' if total_seats > seats
 
     price_sum = 0
     stored.each do |ticket|
-      price_sum += ticket.price * ticket.amount.to_i
+      price_sum += ticket.ticket.price * ticket.amount.to_i
     end
 
     booking = Booking.new(user_id: session['user_id'], price: price_sum,
-                          service_id: stored.first.ticket_connector.service_id,
+                          service_id: stored.first.service_id,
                           booking_time: DateTime.now.to_s,
                           status: 0,
                           session_id: session.id.public_id)
     booking.save
     stored.each do |ticket|
-      p Seat.reserve(ticket.amount, ticket.ticket_connector.service_id,
-                     booking.id, ticket.id)
+      x = BookingConnector.new(booking_id: booking.id, ticket_id: ticket.ticket.id, amount: ticket.amount)
+      x.save
+      Seat.reserve(ticket.amount, ticket.service_id,
+                   booking.id, ticket.ticket.id)
     end
   end
+end
 
-  #   tickets = []
-  #   query = ''
-  #   payload.each do |ticket|
-  #     unless ticket['amount'].to_i == 0
-  #       tickets << ticket['id']
-  #       query += " ticket.id = #{ticket['id']}"
-  #     end
-  #   end
-  #   query = query[0..-4]
-  #   service = back.split('/')
-  #   DBHandler.sql_operator(table: :ticket,
-  #                          where: { or: query },
-  #                          select: 'price, id')
-  #   # price = DBHandler.execute("SELECT price, id from tickets WHERE #{query}",
-  #   # tickets[0..-1])
-
-  #   # Prevents there from being multiple unconfirmed tickets from the same session preventing accidental
-  #   # dubble booking
-  #   DBHandler.execute('DELETE FROM bookings WHERE session_id = ?', session.id)
-  #   if session[:user_id]
-  #     DBHandler.execute('INSERT INTO bookings (price, user_id, service_id, booking_time, status, ' \
-  #               'session_id) VALUES (?,?,?,?,?,?)', price_sum, session[:user_id], service[-1].to_i,
-  #                       DateTime.now.to_s, 0, session.id)
-  #   else
-  #     DBHandler.execute('INSERT INTO bookings (price, service_id, booking_time, status, session_id) '\
-  #     'VALUES (?,?,?,?,?)', price_sum, service[-1].to_i, DateTime.now.to_s, 0, session.id)
-  #   end
-  #   booking = DBHandler.last('bookings').first
-  #   payload.each do |ticket|
-  #     next if ticket['amount'].to_i == 0
-
-  #     Seat.reserve(ticket['amount'].to_i, service[-1].to_i, booking['id'], ticket['id'])
-  #     DBHandler.execute('INSERT INTO booking_connector (booking_id, ticket_id, amount) '\
-  #             'VALUES (?,?, ?)', booking['id'], ticket['id'], ticket['amount'])
-  #   end
-  # end
+# Booking_Connector class for handeling the db table
+class BookingConnector < DBHandler
+  set_table :booking_connector
+  set_columns :booking_id, :ticket_id, :amount
 end
