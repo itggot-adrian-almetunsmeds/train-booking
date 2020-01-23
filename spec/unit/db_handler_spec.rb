@@ -4,24 +4,25 @@ require 'rspec'
 require_relative '../modules/db_handler'
 require_relative '../db/seeder.rb'
 
+class Temp < DBHandler
+end
+
 RSpec.describe 'DBHandler:' do # rubocop:disable Metrics/BlockLength
   Seeder.seed!
   context 'When testing the DBHandler class' do # rubocop:disable Metrics/BlockLength
-    handler = DBHandler.new
-    p handler
-
     it 'the DBHandler object should have instance variables defined' do
       expect(
-        handler.table.to_s
-      ).to eq 'DBHandler'
+        Temp.table.to_s
+      ).to eq ''
 
       expect(
-        handler.tables
+        Temp.tables
       ).to eq nil
 
-      handler.tables = 'potatis'
+      handler = Temp.new id: 92
+      handler.set_table 'potatis'
       expect(
-        handler.tables
+        Temp.tables
       ).to eq 'potatis'
 
       handler.tables = [potis: [:moserade, 'computer', apples: ['potatis']]]
@@ -35,7 +36,7 @@ RSpec.describe 'DBHandler:' do # rubocop:disable Metrics/BlockLength
       expect(handler.has_many('potatisar')).to eq ['potatisar']
     end
 
-    handler = DBHandler.new
+    # handler = DBHandler.new
     it 'the select construcotr should reuturn the correct select query' do
       # Selects
       expect(
@@ -71,7 +72,7 @@ RSpec.describe 'DBHandler:' do # rubocop:disable Metrics/BlockLength
               "'elsevalue' FROM bookings".downcase
     end
 
-    handler = DBHandler.new
+    # handler = DBHandler.new
     it 'the join constructor should return correct joins' do
       # Joins
       expect(
@@ -102,7 +103,7 @@ RSpec.describe 'DBHandler:' do # rubocop:disable Metrics/BlockLength
       ).to eq 'LEFT JOIN service_connector ON bookings.id = service_connector.bookings_id'.downcase
     end
 
-    handler = DBHandler.new
+    # handler = DBHandler.new
     it 'the where constructor should return a correct sql query and the values associated' do
       # Wheres
       expect(
@@ -131,7 +132,7 @@ RSpec.describe 'DBHandler:' do # rubocop:disable Metrics/BlockLength
       ).to eq [' WHERE  user IN (?,?) AND pasta = ?', %w[some things decorations]]
     end
 
-    handler = DBHandler.new
+    # handler = DBHandler.new
     it 'the order construtor should return the correct sql query' do
       # Order
       expect { handler.send(:order_constructor, '') }.to raise_error(RuntimeError)
@@ -151,7 +152,7 @@ RSpec.describe 'DBHandler:' do # rubocop:disable Metrics/BlockLength
                           order: 'DESC').downcase.strip).to eq 'order by id DESC'.downcase
     end
 
-    handler = DBHandler.new
+    # handler = DBHandler.new
     it 'Validate Table Input should validate the input' do
       # Validate Table Input
       expect do
