@@ -28,4 +28,37 @@ class LoginLogoutSpec < Minitest::Spec
 
     find('button', text: 'Sign Out').click
   end
+
+  it 'registers a user and signs in' do
+    find('#login').click
+    find('#login_form > a').click
+    within('#register_form') do
+      fill_in('first_name', with: 'Tester')
+      fill_in('last_name', with: 'Tester')
+      fill_in('email', with: 'Tester@Tester.com')
+      fill_in('password', with: 'Tester')
+      click_button 'Register'
+    end
+
+    page.must_have_css('#login > a > p')
+
+    find('button', text: 'Sign Out').click
+    find('#login').click
+
+    within('#login_form') do
+      fill_in('email', with: 'Tester@Tester.com')
+      fill_in('password', with: 'tester')
+      click_button 'Sign In'
+    end
+
+    assert_equal(false, page.has_css?('#login > a > p'))
+
+    find('#login').click
+    within('#login_form') do
+      fill_in('email', with: 'Tester@Tester.com')
+      fill_in('password', with: 'Tester')
+      click_button 'Sign In'
+    end
+    page.must_have_css('#login > a > p')
+  end
 end

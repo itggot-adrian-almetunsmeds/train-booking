@@ -30,9 +30,8 @@ class AdminPagegSpec < Minitest::Spec
 
     find('p', text: 'No bookings found')
 
-    find('form', action: '/service/3/update')
-    find('form', action: '/service/4/update')
-    find('form', action: '/user/1/update')
-    find('form', action: '/user/5/update')
+    assert_equal(12, all('form').length)
+
+    find('button', text: 'Create')
   end
 end
