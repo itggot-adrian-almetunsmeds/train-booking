@@ -11,6 +11,6 @@ require 'minitest/reporters'
 
 MiniTest::Reporters.use!(MiniTest::Reporters::SpecReporter.new)
 
-class MiniTest::Spec
+class MiniTest::Spec # rubocop:disable Style/ClassAndModuleChildren
   include Rack::Test::Methods
 end
