@@ -15,9 +15,11 @@ class Booking < DBHandler
   # id - Booking id (Integer)
   # session - session Object
   # params - params Object
+  # back - back object from rack (Object)
+  # admin - Is user admin? (Boolean)
   #
   # Returns redirect url
-  def self.cancel(_id, session, params)
+  def self.cancel(_id, session, params, back, admin)
     @bookings = Booking.fetch_where id: params[:id]
     return '/' if @bookings == []
 
@@ -27,7 +29,7 @@ class Booking < DBHandler
              @bookings
            end
 
-    if session[:user_id] == temp.user_id || @admin
+    if session[:user_id] == temp.user_id || admin
       @seats = Seat_connector.fetch_where booking_id: params[:id]
 
       # Resets all associated seats
@@ -126,7 +128,7 @@ class Booking < DBHandler
     stored = []
     total_seats = 0
     payload.each do |ticket|
-      next if ticket['amount'].to_i.zero?
+      next if ticket['amount'].to_i <= 0
 
       total_seats += ticket['amount'].to_i
 
@@ -137,10 +139,10 @@ class Booking < DBHandler
     end
 
     seats = Seat.fetch_where(service_id: stored.first.service_id, occupied: 0)
-    seats = if seats.is_a? Array
-              seats.length
-            elsif seats == []
+    seats = if seats == []
               0
+            elsif seats.is_a? Array
+              seats.length
             else
               1
             end
@@ -158,7 +160,8 @@ class Booking < DBHandler
                           session_id: session.id.public_id)
     booking.save
     stored.each do |ticket|
-      x = BookingConnector.new(booking_id: booking.id, ticket_id: ticket.ticket.id, amount: ticket.amount)
+      x = BookingConnector.new(booking_id: booking.id, ticket_id: ticket.ticket.id,
+                               amount: ticket.amount)
       x.save
       Seat.reserve(ticket.amount, ticket.service_id,
                    booking.id, ticket.ticket.id)
