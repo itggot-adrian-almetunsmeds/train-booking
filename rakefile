@@ -18,24 +18,25 @@ task :test do
 end
 
 task :acceptance do
-  tests =  get_tests_sorted('./spec/acceptance/*_spec.rb')
+  tests = get_tests_sorted('./spec/acceptance/*_spec.rb')
   tests.each do |test|
-    Rake::Task['seed'].invoke #reset db before each test file is run
-    system("bundle exec 'ruby #{test}'")
+    Rake::Task['seed'].invoke # reset db before each test file is run
+    p test
+    system("bundle exec 'ruby #{test}'") unless test.include? 'admin_page_spec'
   end
+  system("bundle exec 'ruby ./spec/acceptance/admin_page_spec.rb'")
 end
 
 task :unit => :spec
 
 
-
 def get_tests_sorted(test_folder_path)
   tests = Dir.glob(test_folder_path).sort_by do |a|
-    basename = File.basename(a)
-    splitted = basename.split("_")
-    splitted.first.to_i
-  end
-  return tests
+            basename = File.basename(a)
+            splitted = basename.split("_")
+            splitted.first.to_i
+          end
+  tests
 end
 
 # task :tester do
