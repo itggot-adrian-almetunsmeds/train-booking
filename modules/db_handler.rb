@@ -50,10 +50,11 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # string - (Symbol, String) of table
   #
   # Returns nothing
-  def self.set_table(string)
+  def self.set_table(string) # rubocop:disable Namin/AccessorMethodName
     @table = string
   end
 
+  # Getter
   class << self
     attr_reader :table
   end
@@ -121,8 +122,10 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # symbols - (Symbol, Hash, Array, String) of columns
   #
   # Returns nothing
-  def self.set_columns(*symbols)
+  def self.set_columns(*symbols) # rubocop:disable Naming/AccessorMethodName
+    # rubocop:disable Style/Semicolon
     symbols = symbols.flatten.map { |x| x = "#{@table}.#{x}" unless x.to_s.include?('.'); x }
+    # rubocop:enable Style/Semicolon
     if @columns.nil?
       @columns = symbols.flatten
     else
@@ -131,6 +134,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     end
   end
 
+  # Getter
   class << self
     attr_reader :columns
   end
@@ -157,15 +161,10 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   def save
     if instance_variables.include? :@id # Update
       update self, self.class.to_s.downcase
-      # TODO: Switch from self.class to @table.
-      # FIXME:
-      #
-      # Did not work on when I tried but this should also work relatively good.
     else # Insert
       hash = {}
       instance_variables.map { |q| hash[q.to_s.gsub('@', '')] = instance_variable_get(q) }
       id = insert hash, self.class.to_s.downcase
-      # TODO: Make class.to_s.downcase not use class name but use name
       unless id.nil?
         instance_variable_set(:@id, id)
         singleton_class.send(:attr_accessor, :id)
@@ -173,7 +172,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     end
   end
 
-  # Updates a object using provided table
+  # Updates a object in the db using provided table and object
   #
   # object - Object to be updated
   # table - DB table to update (String)
@@ -193,7 +192,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
                  " #{var.to_s.gsub('@', '')} = ?"
                else
                  ", #{var.to_s.gsub('@', '')} = ?"
-            end
+               end
       values << object.instance_variable_get(var)
       count += 1
     end
@@ -243,8 +242,8 @@ class DBHandler # rubocop:disable Metrics/ClassLength
 
   # Deletes elements from the database where the condition applies
   #
-  # args- WHere arguments
-  # table - Optional (String, Symbol) of table todelet from
+  # args- Where arguments
+  # table - Optional (String, Symbol) of table todo delete from
   #
   # Returns nothing
   def self.delete_where(args, table = nil)
@@ -412,7 +411,12 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # class_holder - "Origin" instance (Object)
   #
   # Returns nothing
+
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def self.object_constructor(array, class_holder)
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
     if array.length == 1
       array = array.flatten
       object_holder = []
@@ -440,10 +444,6 @@ class DBHandler # rubocop:disable Metrics/ClassLength
         temp = clazz.new("#{string}": value)
         temp.class.send(:attr_accessor, string.to_sym)
         object_holder << temp
-        # TODO: Check if removing .class above works. If so
-        # go with that method
-        # This is based on the singleton_class thought, that only said instance
-        # needs the attr_reader and not the class itself.
       end
       object_holder.each do |object|
         next unless object.class == self
@@ -523,7 +523,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # table - (String, Symbol) Select from table
   #
   # Returns selects as SQL - Query (Partial string)
-  def self.select_constructor(value, table)
+  def self.select_constructor(value, table) # rubocop:disable Metrics/AbcSize
     selects = 'SELECT'
     raise 'No columns provided' if value.nil?
 
@@ -533,7 +533,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
       # Adds additional selects from joined tables
       unless @tables.nil?
         added = []
-        @tables.flatten.each do |table|
+        @tables.flatten.each do |table| # rubocop:disable Lint/ShadowingOuterLocalVariable
           if table.is_a? Hash
             table.each do |hash|
               hash.flatten.each do |r|
@@ -588,7 +588,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # table - (String, Key/Symbol) Table for where the condition applies
   #
   # Reutrns a Array containing wheres as SQL - Query (Partial String), and associated values
-  def self.where_constructor(value, table)
+  def self.where_constructor(value, table) # rubocop:disable Metrics/CyclomaticComplexity
     if value.is_a? Array
       value = value.flatten
       value = value.first if value.length == 1
@@ -603,12 +603,14 @@ class DBHandler # rubocop:disable Metrics/ClassLength
       values << wheres.last
     elsif value.is_a? Hash
       keys = value.keys
+      # rubocop:disable Style/DoubleNegation
       keys.each_with_index do |key, index|
         if value[key].is_a?(String) || value[key].is_a?(Integer) ||
            value[key].is_a?(Symbol) || !!value[key] == value[key] # Boolean?
+          # rubocop:enable Style/DoubleNegation
           temp = value[key]
           temp = temp.to_s if temp.is_a? Symbol
-          key = "#{table}.id" if key.downcase == 'id'
+          key = "#{table}.id" if key.to_s.downcase == 'id'
           where += if index.zero?
                      " #{key} = ?"
                    else
@@ -630,7 +632,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
         end
       end
     elsif value.is_a? Array
-      value.each_with_index do |value, i|
+      value.each_with_index do |value, i| # rubocop:disable Lint/ShadowingOuterLocalVariable
         wheres = value.split(' ')
         wheres[0] = "#{table}.id" if wheres.first.downcase == 'id'
         where += if i.zero?
@@ -746,7 +748,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # tables - Join hash/array/string/key
   #
   # Returns the additional joins from a given class (String)
-  def self.additional_join(tables)
+  def self.additional_join(tables) # rubocop:disable Metrics/AbcSize
     return '' if tables.nil?
 
     query = ''
@@ -758,32 +760,28 @@ class DBHandler # rubocop:disable Metrics/ClassLength
         end
       elsif table.is_a? Symbol
         if class_exists?(table.to_s.downcase.capitalize) && to_s.downcase != table.to_s.downcase
-          query += join_constructor(Object.const_get(table.to_s.downcase.capitalize).tables, Object.const_get(table.to_s.downcase.capitalize).table)
+          query += join_constructor(Object.const_get(table.to_s.downcase.capitalize).tables,
+                                    Object.const_get(table.to_s.downcase.capitalize).table)
           query += additional_join(Object.const_get(table.to_s.downcase.capitalize).tables)
         end
       elsif table.is_a? Hash
-        if class_exists?(table.to_s.downcase.capitalize) && to_s.downcase != table.to_s.downcase
-          temp = table.to_s.downcase.capitalize
-        else
-          if table.to_s.downcase.include?('connector')
-            if class_exists?(table.to_s.split('_')[0].downcase.capitalize) && to_s.downcase != table.to_s.downcase
-              temp = table.to_s.split('_')[0].downcase.capitalize
-            else
-              temp = ''
-            end
-          else
-            temp = ''
-          end
-        end
+        temp = if class_exists?(table.to_s.downcase.capitalize) && to_s.downcase != table.to_s.downcase
+                 table.to_s.downcase.capitalize
+               elsif table.to_s.downcase.include?('connector')
+                 if class_exists?(table.to_s.split('_')[0].downcase.capitalize) &&
+                    to_s.downcase != table.to_s.downcase
+                   table.to_s.split('_')[0].downcase.capitalize
+                 else
+                   ''
+                 end
+               else
+                 ''
+               end
         query += if temp == ''
                    additional_join(table.first)
                  else
                    join_constructor(Object.const_get(temp).tables, table.to_s.downcase)
                  end
-        # TODO: Get all the tables here aswell
-        #
-        # connectors are to handled aswell when inserting table into
-        # join constructor(values, table)
       elsif table.is_a? Array
         query += additional_join table
       end
@@ -840,7 +838,7 @@ class DBHandler # rubocop:disable Metrics/ClassLength
   # table - (String/Key) database table to insert into
   #
   # Reuturns the new id
-  private def insert!(data, table)
+  private def insert!(data, table) # rubocop:disable Style/AccessModifierDeclarations
     if !data.is_a? Hash
       write_to_db(data, table)
     else

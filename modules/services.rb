@@ -15,6 +15,11 @@ class Service < DBHandler
          'destination AS arr ON arr.id = arr_plattform.destination_id',
          :train]
 
+  # Fetches a ticket based on service id unless id is provided
+  #
+  # id - Ticket ID Optional (Integer)
+  #
+  # Returns a ticket Object
   def tickets(id = nil)
     if id.nil?
       Ticket.fetch_where service_id: self.id
@@ -23,6 +28,11 @@ class Service < DBHandler
     end
   end
 
+  # Updates empty seats for a given service and saves it to the db
+  #
+  # id - Service id (Integer)
+  #
+  # Returns nothing
   def self.update_empty_seats(id)
     service = Service.fetch_where id: id
     temp = Seat.fetch_where service_id: id, occupied: 0
@@ -35,6 +45,12 @@ class Service < DBHandler
     service.save
   end
 
+  # Searches for services meeting given params
+  #
+  # params - (Hash) time: dep: arr:
+  #
+  # Returns Service Objects in array or a single Object
+  #   depending on results
   def self.search(params)
     params['dep'] = '%' + params['dep'] + '%'
     params['arr'] = '%' + params['arr'] + '%'
@@ -42,12 +58,10 @@ class Service < DBHandler
     x = fetch_where ["dep.name LIKE #{params['dep']}", "arr.name LIKE #{params['arr']}",
                      "departure_time > #{params['time']}", 'empty_seats != 0']
 
-    if x == []
-      return 'No available services'
-    elsif x.is_a? Array
-      return x.flatten
-    else
-      return x
-    end
+    return 'No available services' if x == []
+
+    return x.flatten if x.is_a? Array
+
+    x
   end
 end
