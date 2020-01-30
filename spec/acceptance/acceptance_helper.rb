@@ -8,7 +8,8 @@ require_relative '../spec_helper'
 require_relative '../../server.rb'
 
 Capybara.app = Server
-Capybara.default_driver = :selenium_chrome
+
+Capybara.default_driver = :selenium_chrome_headless
 
 # Registers thin as the webserver
 Capybara.register_server :thin do |app, port, host|

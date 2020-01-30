@@ -17,6 +17,8 @@ jobs:
     - name: Checking Ruby version
       run: |
         ruby -v
+    - name: setup-chromedriver
+      uses: nanasess/setup-chromedriver@v1.0.1
     - name: Test with Rake
       run: |
         sudo apt-get install libsqlite3-dev
