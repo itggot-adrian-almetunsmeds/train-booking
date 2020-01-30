@@ -9,11 +9,26 @@ class Service < DBHandler
               :arrival_id, :arrival_time, :empty_seats, :'dep.name', :'arr.name',
               :'arr_plattform.name', :'dep_plattform.name'
 
-  has_a ['platform as arr_plattform on service.arrival_id = arr_plattform.id',
-         'platform as dep_plattform on service.departure_id = dep_plattform.id',
-         'destination AS dep ON dep.id = dep_plattform.destination_id',
-         'destination AS arr ON arr.id = arr_plattform.destination_id',
-         :train]
+  has_many :platform, :arr_plattform, 'service.arrival_id = arr_plattform.id'
+  has_many :platform, :dep_plattform, 'service.departure_id = dep_plattform.id'
+  has_many :destination, :dep, 'dep.id = dep_plattform.destination_id'
+  has_many :destination, :arr, 'arr.id = arr_plattform.destination_id'
+
+  has_a :train
+
+  # Saves a new service or updates it
+  #
+  # Returns id if creating a new object
+  def save(new_ = false)
+    super()
+    if new_
+      train = Train.fetch_where id: train_id
+      train.train_type.capacity.to_i.times do
+        Seat.new(service_id: id, occupied: 0, booking_id: 0).save
+      end
+    end
+    id
+  end
 
   # Fetches a ticket based on service id unless id is provided
   #
