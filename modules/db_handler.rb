@@ -80,6 +80,38 @@ class DBHandler # rubocop:disable Metrics/ClassLength
     @tables[-1] = { "#{@tables.last.to_sym}": Object.const_get(tables.to_s.downcase.capitalize).tables }
   end
 
+  # Sets joins with aliases
+  #
+  # table - Database table (String, Symbol)
+  # alia - alias to join as
+  # where_conditions - Conditions to apply for join
+  #
+  # Returns nothing
+  def self.has_many(table, alia, where_conditions)
+    if @has_many
+      @has_many << table
+    else
+      @has_many = [table]
+    end
+    query = "#{table} AS #{alia} ON #{where_conditions}"
+    if class_exists?(table.to_s.downcase.capitalize)
+
+      # Get columns of joined table
+      columns = [Object.const_get(table.to_s.downcase.capitalize).columns]
+      # rubocop:disable Lint/UselessAssignment
+      columns = columns.flatten.map { |column| column = "#{alia}.#{column.split('.').last}" }
+      # rubocop:enable Lint/UselessAssignment
+
+      if @columns.nil?
+        @columns = [columns]
+      else
+        @columns << columns
+      end
+    end
+    has_a query
+  end
+
+  # Getter
   class << self
     attr_reader :tables
   end
