@@ -8,7 +8,7 @@ br
 == slim :'templates/services_list'
 
 h3 New service
-form action="/service/create" method="post"
+form#insert action="/service/create" method="post"
   p Name
   input type="text" name="name"/
   p Train ID
@@ -17,6 +17,10 @@ form action="/service/create" method="post"
   input type="number" name="departure_id"/
   p Arrival ID
   input type="number" name="arrival_id"/
+  p Ticket ID´s
+  input#first type="number" name="ticket_id[]"/
+  input#second type="number" name="ticket_id[]"/
+  input#third type="number" name="ticket_id[]"/
   p Departure time
   input type="datetime-local" name="departure_time"/    
   p Arrival time
